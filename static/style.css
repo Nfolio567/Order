@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Zen+Kaku+Gothic+New&display=swap');
+
+
+* {
+  box-sizing: border-box;
+  font-family: "Manrope", "Zen Kaku Gothic New", sans-serif;
+}
+
+body {
+  background: url("./frute.png") top center / cover repeat;
+  background-color: rgb(248, 245, 212);
+}
+
+header {
+  position: fixed;
+  height: 50px;
+  width: 100vw;
+  z-index: 1000;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(30%);
+  margin: 0 auto;
+  height: 35px;
+  width: 200px;
+  border-radius: 10% 10% 10% 10% / 50% 50% 50% 50%;
+  background-color: rgba(236, 244, 251, 0.8);
+  backdrop-filter: blur(2px);
+  /*animation: headerFade 1.5s ease-in-out;*/
+}
+
+nav > a {
+  position: relative;
+  text-decoration: none;
+  display: inline-block;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: rgb(71, 69, 69);
+  font-weight: bolder;
+  z-index: 1200;
+}
+
+.headerBack {
+  position: absolute;
+  background-color: #909090;
+  z-index: 1100;
+  height: 30px;
+  border-radius: 10% 10% 10% 10% / 50% 50% 50% 50%;
+}
+
+.headerBack.order-list {
+  width: 115px;
+  transform: translateX(-35px);
+}
+
+.headerBack.order {
+  width: 80px;
+  transform: translateX(55px);
+  border-radius: 15% 15% 15% 15% / 50% 50% 50% 50%;
+}
