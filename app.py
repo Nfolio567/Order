@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for
 from flask_migrate import Migrate
 from sqlalchemy import false
-
+from flask_socketio import SocketIO
 from database import db
 from dotenv import load_dotenv
 import os
@@ -11,6 +11,8 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+socketio = SocketIO(app)
 
 db.init_app(app)
 
@@ -25,11 +27,15 @@ def order_list():
     return render_template("order_list.html")
 
 @app.route("/order")
-def oeder():
+def order():
     return render_template("order.html")
+
+@app.route("/api/list")
+def return_list():
+    return 200
 
 if __name__ == "__main__":
     '''with app.app_context():
         db.create_all()'''
 
-    app.run(port=6743, host='0.0.0.0', debug=True)
+    socketio.run(app, port=6743, host='0.0.0.0', debug=True)
