@@ -1,9 +1,36 @@
-@startuml
+@startuml order
 
-  entity "OrderList" {
-    * id : Integer
+  entity "Orders" {
+    * id : Integer <<1>>
     --
-    item
+    is_provided : Boolean
   }
 
+  entity "OrderItems" {
+    * id : Integer
+    --
+    orderer_id : Integer <<FK1>>
+    product_id : Integer <<FK2>>
+    option_id : Integer <<FK3>>
+    quantity : Integer
+    price : Integer
+  }
+
+  entity "Products" {
+    * id : Integer <<2>>
+    --
+    name : Text
+  }
+
+  entity "Options" {
+    * id : Integer <<3>>
+    --
+    name : Text
+    product_id : Integer <<FK2>>
+  }
+
+  Orders ||-d-o{OrderItems
+  Products ||-d-o{OrderItems
+  Options ||-d-o{OrderItems
+  Products ||-r-o{Options
 @enduml
