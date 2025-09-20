@@ -1,12 +1,15 @@
 from flask import Flask, render_template, redirect, url_for, jsonify
 from flask_migrate import Migrate
 from flask_socketio import SocketIO, emit
+from flask_wtf.csrf import CSRFProtect
+from flask_login import LoginManager
 from database import db, Orders
 from dotenv import load_dotenv
 import os
 from sqlalchemy import event
 
 load_dotenv()
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
@@ -18,6 +21,13 @@ socketio = SocketIO(app)
 db.init_app(app)
 
 migrate = Migrate(app, db)
+
+csrf = CSRFProtect()
+csrf.init_app(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "index"
 
 @app.route("/")
 def index():
@@ -43,7 +53,8 @@ def return_list():
       options = [k.name for k in j.product.options]  # 配列に変換
       orders[str(i)] = {"ordererId": j.orderer_id, "item": j.product, "options": options, "quantity": j.quantity, "price": j.price}
 
-  return jsonify({orders})
+  return jsonify([orders])
+
 
 @event.listens_for(Orders, "after_update")
 def new_order(_, __, target):
@@ -53,8 +64,8 @@ def new_order(_, __, target):
     all_order.append(i)
   emit("newOrder", all_order)
 
+
 if __name__ == "__main__":
   '''with app.app_context():
       db.create_all()'''
-
   socketio.run(app, port=6743, host='0.0.0.0', debug=True)
