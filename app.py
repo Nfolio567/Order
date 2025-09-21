@@ -1,9 +1,10 @@
-from flask import Flask, render_template, redirect, url_for, jsonify
+import bcrypt
+from flask import Flask, render_template, redirect, url_for, jsonify, request, flash, Response
 from flask_migrate import Migrate
 from flask_socketio import SocketIO, emit
 from flask_wtf.csrf import CSRFProtect
-from flask_login import LoginManager
-from database import db, Orders
+from flask_login import LoginManager, login_required, logout_user, login_user
+from database import db, Orders, Admin
 from dotenv import load_dotenv
 import os
 from sqlalchemy import event
@@ -33,7 +34,7 @@ login_manager.login_view = "index"
 def index():
   return redirect(url_for("order_list"))
 
-@app.route("/order-list")
+@app.route("/order-list", methods=["GET", "POST"])
 def order_list():
   return render_template("order_list.html")
 
@@ -54,6 +55,35 @@ def return_list():
       orders[str(i)] = {"ordererId": j.orderer_id, "item": j.product, "options": options, "quantity": j.quantity, "price": j.price}
 
   return jsonify([orders])
+
+@app.route("/dashboard", methods=["GET", "POST"])
+@login_required
+def admin():
+  return render_template("dashboard.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+  if request.method =="POST":
+    data = request.get_json()
+    name = data.get("name")
+    password = data.get("password")
+    user = Admin.query.filter_by(name=name).first()
+    print(user)
+    if not user is None and bcrypt.checkpw(password.encode(), user.password.encode()):
+      print("login")
+      login_user(user)
+      flash("ログイン成功", "success")
+      return jsonify({"redirect": url_for("admin")})
+
+    flash("ログインできませんでした", "error")
+    return jsonify({"error": "cant login"}), 200
+  else:
+    return Response(status=404)
+
+
+@login_manager.user_loader
+def load_uer(user_id):
+  return Admin.query.get(str(user_id))
 
 
 @event.listens_for(Orders, "after_update")

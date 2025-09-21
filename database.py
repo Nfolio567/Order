@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
@@ -28,3 +29,9 @@ class OrderItems(db.Model):
   product = db.relationship("Products")
   quantity = db.Column(db.Integer)
   price = db.Column(db.Numeric(10, 0))
+
+class Admin(db.Model, UserMixin):
+  __tablename__ = "admin"
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.Text)
+  password = db.Column(db.Text, unique=True)
