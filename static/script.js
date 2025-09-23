@@ -43,11 +43,23 @@ submitButton === null || submitButton === void 0 ? void 0 : submitButton.addEven
                 })
             });
             const data = yield res.json();
-            console.log(data);
-            console.log(data.redirect);
             if (data.redirect) {
                 console.log(data.redirect);
                 window.location.href = data.redirect;
+            }
+            else if (data.error) {
+                console.log(data.error);
+                const flash = document.getElementById("flash");
+                if (flash) {
+                    flash.classList.remove("flash-hiden");
+                    flash.classList.add("flash");
+                    flash.innerHTML = data.error;
+                    setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
+                        flash.classList.remove("flash");
+                        flash.classList.add("flash-hiden");
+                        flash.innerHTML = "";
+                    }), 2000);
+                }
             }
         }
         catch (e) {

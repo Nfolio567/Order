@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+  <div id="flash" class="flash-style flash-hiden"></div>
   <header>
     <nav>
       <a href="/order-list">ORDER LIST</a>
@@ -21,7 +22,7 @@
   
   <button id="admin-button" class="admin-button">管理者ログイン</button>
 
-  <div id="admin" class="hiden">
+  <div id="admin" class="hidden">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div>
       <p>IDまたは名前</p><input type="text" name="name">

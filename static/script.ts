@@ -37,11 +37,22 @@ submitButton?.addEventListener('click', async () => {
       });
 
       const data = await res.json();
-      console.log(data);
-      console.log(data.redirect);
       if (data.redirect) {
         console.log(data.redirect);
         window.location.href = data.redirect;
+      } else if(data.error) {
+        console.log(data.error);
+        const flash = document.getElementById("flash");
+        if (flash) {
+          flash.classList.remove("flash-hiden");
+          flash.classList.add("flash");
+          flash.innerHTML = data.error;
+          setTimeout(async () => {
+            flash.classList.remove("flash")
+            flash.classList.add("flash-hiden");
+            flash.innerHTML = "";
+          }, 2000);
+        }
       }
     } catch (e) {
       console.error(e);

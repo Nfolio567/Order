@@ -15,6 +15,29 @@ body {
   background-color: rgb(248, 245, 212);
 }
 
+.flash {
+  transform: translateY(0);
+  transition: 0.3s ease-in-out;
+}
+
+.flash-hiden {
+  transform: translateY(-30px);
+  transition: 0.3s ease-in-out;
+}
+
+.flash-style {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(148, 226, 191, 0.7);
+  z-index: 10000;
+  width: 100vw;
+  height: 30px;
+  text-align: center;
+  align-items: center;
+  backdrop-filter: blur(2px);
+}
+
 header {
   position: fixed;
   height: 50px;
@@ -68,6 +91,7 @@ nav > a {
 
 .admin-button {
   position: fixed;
+  top: 15px;
   right: 15px;
   border-radius: 15% 15% 15% 15% / 50% 50% 50% 50%;
   border: none;
@@ -103,7 +127,7 @@ nav > a {
   font-weight: bold;
 }
 
-.hiden {
+.hidden {
   display: none;
 }
 

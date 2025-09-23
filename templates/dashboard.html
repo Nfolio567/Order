@@ -7,9 +7,46 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
 </head>
 <body>
+  <div id="flash" class="flash-style flash-hiden"></div>
   <h1 class="title">商品一覧</h1>
-  <div class="admin-container">
-    <p>a</p>
+
+  <div id="add" class="hidden">
+    <button id="close-add" class="add-close">✖️</button>
+    <div id="add-products" class="add-products">
+      <h1>商品登録</h1>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div>
+        <label style="font-size: 50px; font-weight: bold;">NAME:&nbsp;
+          <input style="width: 65%; font-size: 30px;" type="text" name="product-name">
+        </label>
+      </div>
+      <div>
+        <label style="font-size: 50px; font-weight: bold;">PRICE:&nbsp;¥
+          <input style="width: 60%; font-size: 30px;" type="number" name="product-price">
+        </label>
+      </div>
+      <div id="options" class="options"></div>
+      <button id="add-check-button">確認</button>
+    </div>
   </div>
+
+
+  <div id="add-check" class="hidden">
+    <div id="check-container" class="add-check-content">
+
+    </div>
+  </div>
+
+
+  <div class="products-header">
+    <h2 style="color: #d2691e;">ID</h2>
+    <h2 style="color: #ffb6c1;">NAME</h2>
+    <h2 style="color: #add8e6;">PRICE</h2>
+    <h2 style="color: #9acd32;">OPTIONS</h2>
+    <button class="add-button-product" id="add-button-product">➕</button>
+  </div>
+  <div id="products" class="admin-container"></div>
+
+  <script src="{{ url_for('static', filename='admin.js') }}"></script>
 </body>
 </html>

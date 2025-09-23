@@ -9,17 +9,26 @@ class Orders(db.Model):
   is_provided = db.Column(db.Boolean)
   items = db.relationship("OrderItems")
 
+product_options = db.Table (
+  "product_options",
+  db.Column("id", db.Integer, primary_key=True),
+  db.Column("product_id", db.Integer, db.ForeignKey("products.id")),
+  db.Column("option_id", db.Integer, db.ForeignKey("options.id"))
+)
+
 class Products(db.Model):
   __tablename__ = "products"
   id = db.Column(db.Integer, primary_key=True, unique=True)
   name = db.Column(db.Text)
-  options = db.relationship("Options")
+  price = db.Column(db.Numeric(10, 0))
+  options = db.relationship("Options", secondary=product_options, back_populates="products")
 
 class Options(db.Model):
   __tablename__ = "options"
   id = db.Column(db.Integer, primary_key=True, unique=True)
   name = db.Column(db.Text)
-  products_id = db.Column(db.Integer, db.ForeignKey("products.id"))
+  price = db.Column(db.Numeric(10, 0))
+  products = db.relationship("Products", secondary=product_options, back_populates="options")
 
 class OrderItems(db.Model):
   __tablename__ = "order_items"
