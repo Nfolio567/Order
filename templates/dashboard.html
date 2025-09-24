@@ -10,9 +10,9 @@
   <div id="flash" class="flash-style flash-hiden"></div>
   <h1 class="title">商品一覧</h1>
 
-  <div id="add" class="hidden">
-    <button id="close-add" class="add-close">✖️</button>
-    <div id="add-products" class="add-products">
+  <div id="add-products" class="hidden">
+    <button id="close-add-products" class="add-close">✖️</button>
+    <div class="add-window">
       <h1>商品追加</h1>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div>
@@ -22,7 +22,7 @@
       </div>
       <div>
         <label style="font-size: 50px; font-weight: bold;">PRICE:&nbsp;¥
-          <input style="width: 60%; font-size: 30px;" type="number" name="product-price">
+          <input style="width: 60%; font-size: 30px;" type="number" name="product-price" min="0" max="10000">
         </label>
       </div>
       <div id="options" class="options"></div>
@@ -31,9 +31,22 @@
   </div>
 
 
+  <div id="add-options" class="add-background">
+    <button id="close-add" class="add-close">✖️</button>
+    <div class="add-window">
+      <h1>オプション追加</h1>
+      <label style="font-size: 50px; font-weight: bold;">NAME:&nbsp;
+        <input style="width: 60%; font-size: 30px;" type="text" name="option-name">
+      </label>
+      <label style="font-size: 50px; font-weight: bold;">PRICE:&nbsp;¥
+        <input style="width: 60%; font-size: 30px;" type="number" name="option-price" min="0" max="10000">
+      </label>
+    </div>
+  </div>
+
+
   <div id="add-check" class="hidden">
     <div id="check-container" class="add-check-content">
-
     </div>
   </div>
 
@@ -43,12 +56,12 @@
     <h2 style="color: #ffb6c1;">NAME</h2>
     <h2 style="color: #add8e6;">PRICE</h2>
     <h2 style="color: #9acd32;">OPTIONS</h2>
-    <button id="open-add-selecter" class="open-add-selecter">➕</button>
+    <button id="open-add-selector" class="open-add-selector">➕</button>
   </div>
   <div id="products" class="admin-container">
     <div id="add-select-diarog" class="hidden">
       <button id="add-button-product" class="diarog-content">商品追加</button>
-      <button class="diarog-content">オプション追加</button>
+      <button id="add-button-options" class="diarog-content">オプション追加</button>
     </div>
   </div>
 

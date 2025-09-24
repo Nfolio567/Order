@@ -8,6 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+const moneyFormatter = Intl.NumberFormat('ja-JP', {
+    style: 'currency',
+    currency: 'JPY'
+});
 window.addEventListener("DOMContentLoaded", () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const res = yield fetch("/api/products");
@@ -15,18 +19,13 @@ window.addEventListener("DOMContentLoaded", () => __awaiter(void 0, void 0, void
         console.log(datas.length);
         const productsElement = document.getElementById("products");
         if (productsElement) {
-            const moneyFormatter = Intl.NumberFormat('ja-JP', {
-                style: 'currency',
-                currency: 'JPY'
-            });
             datas.forEach((data) => {
-                const formatedPrice = moneyFormatter.format(data.price);
                 productsElement.insertAdjacentHTML("beforeend", `<div class="product">
             <div style="display: flex; align-items: center;">
               <h1 class="id">${data.id}: </h1>
               <h2 class="product-name">${data.name}</h2>
             </div>
-            <h2 class="product-price">${formatedPrice}</h2>
+            <h2 class="product-price">${moneyFormatter.format(data.price)}</h2>
             <h2 class="product-options">${data.options}</h2>
           </div>`);
             });
@@ -36,25 +35,32 @@ window.addEventListener("DOMContentLoaded", () => __awaiter(void 0, void 0, void
         console.error(e);
     }
 }));
-const openAddSelecter = document.getElementById("open-add-selecter");
-openAddSelecter === null || openAddSelecter === void 0 ? void 0 : openAddSelecter.addEventListener('click', () => {
+const openAddSelector = document.getElementById("open-add-selector");
+let selectorTogle = false;
+openAddSelector === null || openAddSelector === void 0 ? void 0 : openAddSelector.addEventListener('click', () => {
+    selectorTogle = !selectorTogle;
     const addSelecter = document.getElementById("add-select-diarog");
-    if (addSelecter)
-        addSelecter.className = "add-select-diarog"; // セレクター表示
+    if (addSelecter) {
+        if (selectorTogle)
+            addSelecter.className = "add-select-diarog"; // セレクター表示
+        else
+            addSelecter.className = "hidden";
+    }
 });
 const addButtonProduct = document.getElementById("add-button-product");
-console.log(addButtonProduct);
 addButtonProduct === null || addButtonProduct === void 0 ? void 0 : addButtonProduct.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
     const addSelecter = document.getElementById("add-select-diarog");
-    if (addSelecter)
+    if (addSelecter) {
+        selectorTogle = false;
         addSelecter.className = "hidden"; // セレクター非表示
+    }
     const res = yield fetch('/api/options');
     const datas = yield res.json();
     const options = document.getElementById("options");
-    const add = document.getElementById("add");
+    const add = document.getElementById("add-products");
     if (options && add) {
         options.innerHTML = "";
-        add.className = "add-products-background";
+        add.className = "add-background";
         datas.forEach((data) => {
             options.innerHTML +=
                 `<div>
@@ -66,7 +72,7 @@ addButtonProduct === null || addButtonProduct === void 0 ? void 0 : addButtonPro
         });
     }
 }));
-const closeAdd = document.getElementById("close-add");
+const closeAdd = document.getElementById("close-add-products");
 closeAdd === null || closeAdd === void 0 ? void 0 : closeAdd.addEventListener("click", closeAddWindow); // 商品追加ウィンドウ閉じる
 const addCheckBotton = document.getElementById("add-check-button");
 addCheckBotton === null || addCheckBotton === void 0 ? void 0 : addCheckBotton.addEventListener("click", () => {
@@ -76,7 +82,7 @@ addCheckBotton === null || addCheckBotton === void 0 ? void 0 : addCheckBotton.a
         closeAddWindow();
         const addCheck = document.getElementById("add-check");
         if (addCheck)
-            addCheck.className = "add-products-background";
+            addCheck.className = "add-background";
         const checkContainer = document.getElementById("check-container");
         if (checkContainer)
             checkContainer.innerHTML =
@@ -106,9 +112,9 @@ addCheckBotton === null || addCheckBotton === void 0 ? void 0 : addCheckBotton.a
     `;
         const cancel = document.getElementById("add-cancel");
         cancel === null || cancel === void 0 ? void 0 : cancel.addEventListener('click', () => {
-            const add = document.getElementById("add");
+            const add = document.getElementById("add-products");
             if (add)
-                add.className = "add-products-background";
+                add.className = "add-background";
             closeAddCheckWindow();
         });
         const addSubmit = document.getElementById("add-submit");
@@ -145,15 +151,14 @@ addCheckBotton === null || addCheckBotton === void 0 ? void 0 : addCheckBotton.a
                     const productsElement = document.getElementById("products");
                     const newProduct = data.newContent;
                     if (productsElement) {
-                        productsElement.innerHTML +=
-                            `<div class="product">
-              <div style="display: flex; align-items: center;">
-                <h1 class="id">${newProduct.id}: </h1>
-                <h2 class="product-name">${newProduct.name}</h2>
-              </div>
-              <h2 class="product-price">${newProduct.price}</h2>
-              <h2 class="product-options">${newProduct.options}</h2>
-            </div>`;
+                        productsElement.insertAdjacentHTML("beforeend", `<div class="product">
+                <div style="display: flex; align-items: center;">
+                  <h1 class="id">${newProduct.id}: </h1>
+                  <h2 class="product-name">${newProduct.name}</h2>
+                </div>
+                <h2 class="product-price">${moneyFormatter.format(newProduct.price)}</h2>
+                <h2 class="product-options">${newProduct.options}</h2>
+              </div>`);
                     }
                 }
             }
@@ -169,7 +174,10 @@ function closeAddCheckWindow() {
         addhCheck.className = "hidden";
 }
 function closeAddWindow() {
-    const add = document.getElementById("add");
+    const add = document.getElementById("add-products");
     if (add)
         add.className = "hidden";
 }
+const addButtonOptions = document.getElementById("add-button-options");
+addButtonOptions === null || addButtonOptions === void 0 ? void 0 : addButtonOptions.addEventListener('click', () => {
+});
