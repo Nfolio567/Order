@@ -21,7 +21,7 @@ adminButton === null || adminButton === void 0 ? void 0 : adminButton.addEventLi
         popover.className = "admin-login";
     }
     else if (popover) {
-        popover.className = "hiden";
+        popover.className = "hidden";
     }
 });
 const submitButton = document.getElementById("submit");
