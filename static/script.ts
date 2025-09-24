@@ -12,7 +12,7 @@ adminButton?.addEventListener('click', () => {
   if (isVisible && popover) {
     popover.className = "admin-login";
   } else if (popover) {
-    popover.className = "hiden";
+    popover.className = "hidden";
   }
 });
 

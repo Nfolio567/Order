@@ -11,7 +11,7 @@ window.addEventListener("DOMContentLoaded", async () => { // 初回ロードで�
       });
       datas.forEach((data: { id: any; name: any; options: any; price: any }) => {
         const formatedPrice = moneyFormatter.format(data.price);
-        productsElement.innerHTML += 
+        productsElement.insertAdjacentHTML("beforeend",  
           `<div class="product">
             <div style="display: flex; align-items: center;">
               <h1 class="id">${data.id}: </h1>
@@ -19,7 +19,8 @@ window.addEventListener("DOMContentLoaded", async () => { // 初回ロードで�
             </div>
             <h2 class="product-price">${formatedPrice}</h2>
             <h2 class="product-options">${data.options}</h2>
-          </div>`;
+          </div>`
+        );
       });
     }
   } catch (e) {
@@ -28,9 +29,19 @@ window.addEventListener("DOMContentLoaded", async () => { // 初回ロードで�
 });
 
 
+const openAddSelecter = document.getElementById("open-add-selecter");
+openAddSelecter?.addEventListener('click', () => {
+  const addSelecter = document.getElementById("add-select-diarog");
+  if (addSelecter) addSelecter.className = "add-select-diarog"; // セレクター表示
+})
+
+
 const addButtonProduct = document.getElementById("add-button-product");
+console.log(addButtonProduct);
 addButtonProduct?.addEventListener('click', async () => { // 商品追加ウィンドウ描画
-  console.log("aaa")
+  const addSelecter = document.getElementById("add-select-diarog");
+  if (addSelecter) addSelecter.className = "hidden"; // セレクター非表示
+
   const res = await fetch('/api/options');
   const datas = await res.json();
   const options = document.getElementById("options");
@@ -49,6 +60,7 @@ addButtonProduct?.addEventListener('click', async () => { // 商品追加ウィ�
     });
   }
 });
+
 
 const closeAdd = document.getElementById("close-add");
 closeAdd?.addEventListener("click", closeAddWindow);　// 商品追加ウィンドウ閉じる

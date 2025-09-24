@@ -21,15 +21,14 @@ window.addEventListener("DOMContentLoaded", () => __awaiter(void 0, void 0, void
             });
             datas.forEach((data) => {
                 const formatedPrice = moneyFormatter.format(data.price);
-                productsElement.innerHTML +=
-                    `<div class="product">
+                productsElement.insertAdjacentHTML("beforeend", `<div class="product">
             <div style="display: flex; align-items: center;">
               <h1 class="id">${data.id}: </h1>
               <h2 class="product-name">${data.name}</h2>
             </div>
             <h2 class="product-price">${formatedPrice}</h2>
             <h2 class="product-options">${data.options}</h2>
-          </div>`;
+          </div>`);
             });
         }
     }
@@ -37,9 +36,18 @@ window.addEventListener("DOMContentLoaded", () => __awaiter(void 0, void 0, void
         console.error(e);
     }
 }));
+const openAddSelecter = document.getElementById("open-add-selecter");
+openAddSelecter === null || openAddSelecter === void 0 ? void 0 : openAddSelecter.addEventListener('click', () => {
+    const addSelecter = document.getElementById("add-select-diarog");
+    if (addSelecter)
+        addSelecter.className = "add-select-diarog"; // セレクター表示
+});
 const addButtonProduct = document.getElementById("add-button-product");
+console.log(addButtonProduct);
 addButtonProduct === null || addButtonProduct === void 0 ? void 0 : addButtonProduct.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("aaa");
+    const addSelecter = document.getElementById("add-select-diarog");
+    if (addSelecter)
+        addSelecter.className = "hidden"; // セレクター非表示
     const res = yield fetch('/api/options');
     const datas = yield res.json();
     const options = document.getElementById("options");
