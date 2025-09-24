@@ -42,6 +42,9 @@ body {
   text-align: center;
 }
 
+.add-select-diarog {
+}
+
 .add-products {
   position: fixed;
   display: flex;

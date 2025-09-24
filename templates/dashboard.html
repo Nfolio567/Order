@@ -10,10 +10,15 @@
   <div id="flash" class="flash-style flash-hiden"></div>
   <h1 class="title">商品一覧</h1>
 
+  <div class="add-select-diarog">
+    <p>商品追加</p>
+    <p>オプション追加</p>
+  </div>
+
   <div id="add" class="hidden">
     <button id="close-add" class="add-close">✖️</button>
     <div id="add-products" class="add-products">
-      <h1>商品登録</h1>
+      <h1>商品追加</h1>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div>
         <label style="font-size: 50px; font-weight: bold;">NAME:&nbsp;
