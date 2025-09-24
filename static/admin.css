@@ -43,6 +43,33 @@ body {
 }
 
 .add-select-diarog {
+  position: absolute;
+  right: 0;
+  top: 1vh;
+  transform: translateX(5%);
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(236, 244, 251, 0.8);
+  backdrop-filter: blur(4px);
+  height: 130px;
+  width: 170px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px 0 / 20px 0;
+  z-index: 100;
+}
+
+.diarog-content {
+  position: relative;
+  margin: 5px;
+  border:dashed 2px #353535;
+  --font-size: 20px;
+  font-size: var(--font-size);
+  width: calc(var(--font-size)*8);
+  text-align: center;
+  border-radius: 20px;
+  z-index: 101;
+  background-color: transparent;
 }
 
 .add-products {
@@ -114,7 +141,7 @@ body {
   justify-content: center;
 }
 
-.add-button-product {
+.open-add-selecter {
   position: absolute;
   right: 0;
   background-color: transparent;
@@ -127,6 +154,7 @@ body {
 }
 
 .admin-container{
+  position: relative;
   text-align: center;
   margin: auto;
   display: flex;
@@ -136,6 +164,7 @@ body {
   border-radius: 20px 0 / 20px 0;
   background-color: rgba(236, 244, 251, 0.7);
   backdrop-filter: blur(4px);
+  z-index: 1;
 }
 
 .product {
