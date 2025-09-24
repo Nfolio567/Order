@@ -1,5 +1,5 @@
 import bcrypt
-from flask import Flask, render_template, redirect, url_for, jsonify, request, flash, Response
+from flask import Flask, render_template, redirect, url_for, jsonify, request, Response
 from flask_migrate import Migrate
 from flask_socketio import SocketIO, emit
 from flask_wtf.csrf import CSRFProtect
