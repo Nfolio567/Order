@@ -1,3 +1,7 @@
+from gevent import monkey
+monkey.patch_all()
+
+import json
 import bcrypt
 from flask import Flask, render_template, redirect, url_for, jsonify, request, Response
 from flask_migrate import Migrate
@@ -69,14 +73,13 @@ def return_products():
     print(products)
     products_list = []
     for i in products:
-      print("qa")
-      print(i)
       options = []
       for j in i.options:
         options.append(j.name)
       products_list.append({"id": i.id, "name": i.name, "price": i.price, "options": options})
-    print(products_list)
-    return jsonify(products_list), 200
+    products_2_json = jsonify(products_list)
+    print(products_2_json)
+    return products_2_json, 200
 
   elif request.method == "POST":  # 商品登録
     data = request.get_json()
@@ -115,6 +118,13 @@ def return_options():
       options_list.append({"id": i.id, "name": i.name, "price": i.price})
     return jsonify(options_list)
   elif request.method == "POST":  # オプション登録
+    data = request.get_json()
+    name = data.get("name")
+    price = data.get("price")
+    new_option = Options(name=name, price=price)
+    db.session.add(new_option)
+    db.session.commit()
+    print(new_option)
     return jsonify({"status": "success"})
   return Response(status=200)
 
@@ -148,8 +158,8 @@ def new_order(_, __, target):
   all_order = []
   order_items = target.items
   for i in order_items:
-    all_order.append(i)
-  emit("newOrder", all_order)
+    all_order.append({"id": i.id, "ordererID": i.orerer_id, "product": i.product.name})
+  emit("newOrder", json.dumps({}))
 
 
 if __name__ == "__main__":
