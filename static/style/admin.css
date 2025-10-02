@@ -1,0 +1,262 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
+@font-face {
+  font-family: 'Jippori Gothic';
+  src: url('../font/ShipporiGothicB2-Bold.ttf') format('truetype');
+}
+
+.container {
+  position: relative;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Manrope', 'Jippori Gothic', sans-serif;
+  color: #353535;
+}
+
+body {
+  background: url("../image/admin_frute.png") top center / cover repeat;
+  background-color: rgb(248, 245, 212);
+}
+
+.logout {
+  position: absolute;
+  top: 40px;
+}
+
+.flash {
+  transform: translateY(0);
+  opacity: 1;
+  transition: 0.3s ease-in-out;
+}
+
+.flash-hiden {
+  transform: translateY(-30px);
+  opacity: 0;
+  transition: 0.3s ease-in-out;
+}
+
+.flash-style {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(148, 226, 191, 0.7);
+  z-index: 10000;
+  width: 100vw;
+  height: 30px;
+  text-align: center;
+  align-items: center;
+  backdrop-filter: blur(2px);
+}
+
+.title {
+  text-align: center;
+  font-weight: bolder;
+}
+
+.add-select-diarog {
+  position: absolute;
+  right: 0;
+  top: 1vh;
+  transform: translateX(5%);
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(236, 244, 251, 0.8);
+  backdrop-filter: blur(4px);
+  height: 170px;
+  width: 170px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px 0 / 20px 0;
+  z-index: 100;
+}
+
+.diarog-content {
+  position: relative;
+  margin: 5px;
+  border:dashed 2px #353535;
+  --font-size: 20px;
+  font-size: var(--font-size);
+  width: calc(var(--font-size)*8);
+  text-align: center;
+  border-radius: 20px;
+  z-index: 101;
+  background-color: transparent;
+}
+
+.add-window {
+  position: fixed;
+  top: 50%;
+  right: 50%;
+  transform: translateX(50%) translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  background-color: rgba(236, 244, 251);
+  text-align: center;
+  border-radius: 20px 0 / 20px 0;
+}
+
+.add-window.products {
+  width: 50vw;
+  height: 80%;
+}
+
+.add-window.options {
+  width: 50vw;
+  height: 45%;
+}
+
+.add-background {
+  position: fixed;
+  background-color: rgba(53, 53, 53, 0.6);
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 9;
+}
+
+.close {
+  position: absolute;
+  background-color: transparent;
+  border: none;
+  font-size: 30px;
+  z-index: 11;
+}
+
+.close.products {
+  top: 10%;
+  right: 25%;
+}
+
+.close.options {
+  top: 28%;
+  right: 25%;
+}
+
+.close.delete-product {
+  top: 1%;
+  right: 1%;
+}
+
+.check-content {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  top: 10%;
+  right: 50%;
+  transform: translateX(50%);
+  width: 50vw;
+  height: 80%;
+  background-color: rgba(236, 244, 251);
+  text-align: center;
+  border-radius: 20px 0 / 20px 0;
+}
+
+.hidden {
+  display: none;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+}
+
+.products-header {
+  position: relative;
+  display: flex;
+  background-color: rgba(236, 244, 251);
+  width: 80%;
+  height: 70px;
+  margin: auto;
+  border-radius: 20px 0 / 20px 0;
+  justify-content: center;
+}
+
+.open-add-selector {
+  position: absolute;
+  right: 0;
+  background-color: transparent;
+  border: none;
+  font-size: 50px;
+}
+
+.products-header > h2 {
+  margin-left: 20px;
+}
+
+.admin-container{
+  position: relative;
+  text-align: center;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  height: 100%;
+  border-radius: 20px 0 / 20px 0;
+  background-color: rgba(236, 244, 251, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 1;
+}
+
+.product {
+  position: relative;
+  background-color: #353535;
+  width: 80%;
+  margin: 20px auto;
+  border-radius: 20px 0 / 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ud-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.id {
+  font-size: 80px;
+  color: #d2691e;
+  margin-top: 0;
+}
+
+.product-name {
+  font-size: 50px;
+  color: #ffb6c1;
+  margin-left: 20px;
+  margin-top: 5%;
+  width: 70%;
+  overflow-wrap: anywhere;
+}
+
+.product-price {
+  font-size: 50px;
+  padding: 0;
+  margin: 0;
+  transform: translateY(-30%);
+  color: #add8e6;
+}
+
+.product-options {
+  font-size: 25px;
+  margin-left: 20px;
+  margin-bottom: 5px;
+  color: #9acd32;
+}
+
+.id-name-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.delete-product, .update-product {
+  background-color: transparent;
+  border: none;
+}

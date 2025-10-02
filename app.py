@@ -1,4 +1,7 @@
 from gevent import monkey
+
+from util import gen_base36
+
 monkey.patch_all()
 
 import json
@@ -65,7 +68,7 @@ def return_list():
 def admin():
   return render_template("dashboard.html")
 
-@app.route("/api/products", methods=["GET", "POST"])
+@app.route("/api/products")
 @login_required
 def return_products():
   if request.method == "GET":  # 商品一覧取得
@@ -80,13 +83,19 @@ def return_products():
     products_2_json = jsonify(products_list)
     print(products_2_json)
     return products_2_json, 200
+  return Response(status=200)
 
-  elif request.method == "POST":  # 商品登録
+@app.route("/api/products/create", methods=["POST"])
+@login_required
+def create_products():
+  if request.method == "POST":  # 商品登録
     data = request.get_json()
     name = data.get("name")
     price = data.get("price")
     option_names = data.get("options")
-    new_product = Products(name=name, price=price)
+    new_id = gen_base36()
+    print(new_id)
+    new_product = Products(id=new_id, name=name, price=price)
     db.session.add(new_product)
     db.session.commit()
     for i in option_names:
@@ -108,44 +117,71 @@ def return_products():
     })
   return Response(status=200)
 
-@app.route("/api/options", methods=["GET", "POST"])
+@app.route("/api/products/delete", methods=["POST"])
 @login_required
-def return_options():
-  if request.method == "GET":  # オプション一覧取得
-    options = Options.query.all()
-    options_list = []
-    for i in options:
-      options_list.append({"id": i.id, "name": i.name, "price": i.price})
-    return jsonify(options_list)
-  elif request.method == "POST":  # オプション登録
-    data = request.get_json()
-    name = data.get("name")
-    price = data.get("price")
-    new_option = Options(name=name, price=price)
-    db.session.add(new_option)
-    db.session.commit()
-    print(new_option)
-    return jsonify({"status": "success"})
-  return Response(status=200)
+def delete_products():
+  data = request.get_json()
+  deleted_id = data.get("id")
+  deleted_product = Products.query.filter_by(id=deleted_id).first()
+  db.session.delete(deleted_product)
+  db.session.commit()
+  return jsonify({"status": "success"})
 
+
+@app.route("/api/options")
+@login_required
+def return_options():  # オプション一覧取得
+  options = Options.query.all()
+  options_list = []
+  for i in options:
+    options_list.append({"id": i.id, "name": i.name, "price": i.price})
+  return jsonify(options_list)
+
+@app.route("/api/options/create", methods=["POST"])
+@login_required
+def create_options():  # オプション登録
+  data = request.get_json()
+  name = data.get("name")
+  price = data.get("price")
+  new_option = Options(name=name, price=price)
+  db.session.add(new_option)
+  db.session.commit()
+  print(new_option)
+  return jsonify({"status": "success"})
+
+@app.route("/api/options/delete", methods=["POST"])
+@login_required
+def delete_options():
+  data = request.get_json()
+  name = data.get("name")
+  
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
   if request.method =="POST":
-    data = request.get_json()
-    name = data.get("name")
-    password = data.get("password")
-    user = Admin.query.filter_by(name=name).first()
-    print(user)
-    if not user is None and bcrypt.checkpw(password.encode(), user.password.encode()):
-      print("login")
-      login_user(user)
+    try:
+      data = request.get_json()
+      name = data.get("name")
+      password = data.get("password")
+      user = Admin.query.filter_by(name=name).first()
+      print(user.password)
+      if not user is None and bcrypt.checkpw(password.encode(), user.password.encode()):
+        print("login")
+        login_user(user)
 
-      return jsonify({"redirect": url_for("admin")})
+        return jsonify({"redirect": url_for("admin")})
+    except Exception:
+      return jsonify({"error": "ログインできませんでした"}), 200
 
     return jsonify({"error": "ログインできませんでした"}), 200
   else:
     return Response(status=404)
+
+@app.route("/logout")
+@login_required
+def logout():
+  logout_user()
+  return redirect(url_for("index"))
 
 
 @login_manager.user_loader
@@ -159,10 +195,10 @@ def new_order(_, __, target):
   order_items = target.items
   for i in order_items:
     all_order.append({"id": i.id, "ordererID": i.orerer_id, "product": i.product.name})
-  emit("newOrder", json.dumps({}))
+  socketio.emit("newOrder", json.dumps({}))
 
 
 if __name__ == "__main__":
   '''with app.app_context():
-      db.create_all()'''
+    db.create_all()'''
   socketio.run(app, port=6743, host='0.0.0.0', debug=True)

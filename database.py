@@ -12,13 +12,13 @@ class Orders(db.Model):
 product_options = db.Table (
   "product_options",
   db.Column("id", db.Integer, primary_key=True),
-  db.Column("product_id", db.Integer, db.ForeignKey("products.id")),
+  db.Column("product_id", db.String(4), db.ForeignKey("products.id")),
   db.Column("option_id", db.Integer, db.ForeignKey("options.id"))
 )
 
 class Products(db.Model):
   __tablename__ = "products"
-  id = db.Column(db.Integer, primary_key=True, unique=True)
+  id = db.Column(db.String(4), primary_key=True, unique=True)
   name = db.Column(db.Text)
   price = db.Column(db.Numeric(10, 0))
   options = db.relationship("Options", secondary=product_options, back_populates="products")
@@ -41,7 +41,7 @@ class OrderItems(db.Model):
   __tablename__ = "order_items"
   id = db.Column(db.Integer, primary_key=True, unique=True)
   orderer_id = db.Column(db.Integer, db.ForeignKey("orders.id"))
-  product_id = db.Column(db.Integer, db.ForeignKey("products.id"))
+  product_id = db.Column(db.String(4), db.ForeignKey("products.id"))
   options = db.relationship("Options", secondary=ordered_options)
   product = db.relationship("Products")
   quantity = db.Column(db.Integer)

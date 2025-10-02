@@ -4,15 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DASHBOARD</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style/admin.css') }}">
 </head>
 <body>
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <div id="flash" class="flash-style flash-hiden"></div>
   <h1 class="title">商品一覧</h1>
+  <button class="logout" onclick="location.href='/logout'">ログアウト</button>
 
   <div id="add-products" class="hidden">
-    <button id="close-add-products" class="add-close products">✖️</button>
+    <button id="close-add-products" class="close products">✖️</button>
     <div class="add-window products">
       <h1>商品追加</h1>
       <div>
@@ -32,7 +33,7 @@
 
 
   <div id="add-options" class="hidden">
-    <button id="close-add-options" class="add-close options">✖️</button>
+    <button id="close-add-options" class="close options">✖️</button>
     <div class="add-window options">
       <h1>オプション追加</h1>
       <label style="font-size: 50px; font-weight: bold;">NAME:&nbsp;
@@ -46,8 +47,18 @@
   </div>
 
 
-  <div id="add-check" class="hidden">
-    <div id="check-container" class="add-check-content">
+  <div id="delete-options" class="hidden">
+    <button id="close-delete-options" class="close options">✖️</button>
+    <div class="add-window options">
+      <h1>オプション削除</h1>
+      <div id="select-delete-options" class="select-delete-options"></div>
+      <button id="delete-options-check-button">確認</button>
+    </div>
+  </div>
+
+
+  <div id="check" class="hidden">
+    <div id="check-container" class="check-content">
     </div>
   </div>
 
@@ -63,11 +74,14 @@
     <div id="add-select-diarog" class="hidden">
       <button id="add-button-product" class="diarog-content">商品追加</button>
       <button id="add-button-options" class="diarog-content">オプション追加</button>
+      <button id="delete-button-options" class="diarog-content">オプション削除</button>
     </div>
   </div>
 
-  <script src="{{ url_for('static', filename='AddOptions.js') }}"></script>
-  <script src="{{ url_for('static', filename='AddProducts.js') }}"></script>
-  <script src="{{ url_for('static', filename='admin.js') }}"></script>
+  <script src="{{ url_for('static', filename='script/DeleteOption.js') }}"></script>
+  <script src="{{ url_for('static', filename='script/DeleteProduct.js') }}"></script>
+  <script src="{{ url_for('static', filename='script/AddOptions.js') }}"></script>
+  <script src="{{ url_for('static', filename='script/AddProducts.js') }}"></script>
+  <script src="{{ url_for('static', filename='script/admin.js') }}"></script>
 </body>
 </html>
