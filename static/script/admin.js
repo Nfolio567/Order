@@ -25,6 +25,25 @@ function closeAddCheckWindow() {
     if (addhCheck)
         addhCheck.className = "hidden";
 }
+function fetch2Server(content, URL, method) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const csrfToken = document.querySelector("input[name=csrf_token]");
+            const res = yield fetch(URL, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken.value
+                },
+                body: JSON.stringify(content)
+            });
+            return res.json();
+        }
+        catch (e) {
+            console.error(e);
+        }
+    });
+}
 window.addEventListener("DOMContentLoaded", () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const res = yield fetch("/api/products");

@@ -61,34 +61,12 @@ class AddProducts {
       cancel?.addEventListener('click', correction);
 
       const addSubmit = document.getElementById("add-products-submit");
-      addSubmit?.addEventListener("click", () => fetch2Server(checkedOptions));
-    }
-
-
-    function correction() { // 修正された時のアクション
-      const add = document.getElementById("add-products");
-      if (add) add.className = "add-background";
-      closeAddCheckWindow();
-    }
-
-    async function fetch2Server(checkedOptions: Array<String>) { // サーバーに送信
-      const csrfToken = document.querySelector("input[name=csrf_token]") as HTMLInputElement;
-      try {
-          const res = await fetch('/api/products/create', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken.value
-          },
-          body: JSON.stringify({
-            name: name.value,
-            price: price.value,
-            options: checkedOptions
-          })
-        });
-
-        const data = await res.json();
-
+      addSubmit?.addEventListener("click", async () => {
+        const data = await fetch2Server({
+          "name": name.value, 
+          "price": price.value, 
+          "options": checkedOptions
+        }, '/api/products/create', 'POST');
         if (data.status) {
           const status = data.status;
           const flash = document.getElementById("flash");
@@ -118,9 +96,13 @@ class AddProducts {
             );
           }
         }
-      } catch (e) {
-        console.error(e);
-      }
+      });
+    }
+
+    function correction() { // 修正された時のアクション
+      const add = document.getElementById("add-products");
+      if (add) add.className = "add-background";
+      closeAddCheckWindow();
     }
   }
 }

@@ -30,32 +30,11 @@ class AddOptions {
 
       const submit = document.getElementById("add-options-submit");
       const cancel = document.getElementById("add-options-cancel");
-      submit?.addEventListener('click', fetch2Server);
-      cancel?.addEventListener('click', correction);
-    }
-
-    function correction() { // 修正された時のアクション
-      const add = document.getElementById("add-options");
-      if (add) add.className = "add-background";
-      closeAddCheckWindow();
-    }
-
-    async function fetch2Server() { // サーバーに送信
-      const csrfToken = document.querySelector("input[name=csrf_token]") as HTMLInputElement;
-      try {
-        const res = await fetch('/api/options/create', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken.value
-          },
-          body: JSON.stringify({
+      submit?.addEventListener('click', async () => {
+        const data = await fetch2Server({
             "name": name.value,
             "price": price.value
-          })
-        });
-
-        const data = await res.json();
+        }, '/api/options/create', 'POST');
 
         if (data.status) {
           const status = data.status;
@@ -72,9 +51,14 @@ class AddOptions {
           }
           closeAddCheckWindow();
         }
-      } catch (e) {
-        console.error(e);
-      }
+      });
+      cancel?.addEventListener('click', correction);
+    }
+
+    function correction() { // 修正された時のアクション
+      const add = document.getElementById("add-options");
+      if (add) add.className = "add-background";
+      closeAddCheckWindow();
     }
   }
 }

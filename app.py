@@ -154,7 +154,10 @@ def create_options():  # オプション登録
 def delete_options():
   data = request.get_json()
   name = data.get("name")
-  
+  deleted_options = Options.query.filter_by(name=name).first()
+  db.session.delete(deleted_options)
+  db.session.commit()
+  return jsonify({"status": "success"})
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

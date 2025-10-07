@@ -79,7 +79,26 @@ class DeleteOption {
         const deleteCorrectionButton = document.getElementById("delete-option-correction");
         deleteCorrectionButton === null || deleteCorrectionButton === void 0 ? void 0 : deleteCorrectionButton.addEventListener('click', correction);
         const deleteButton = document.getElementById("delete-button-option");
-        deleteButton === null || deleteButton === void 0 ? void 0 : deleteButton.addEventListener('click', fetch2Server);
+        deleteButton === null || deleteButton === void 0 ? void 0 : deleteButton.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
+            const data = yield fetch2Server({ "name": checkedOptions }, '/api/options/delete', 'POST');
+            if (data.status) {
+                const status = data.status;
+                const flash = document.getElementById("flash");
+                if (flash) {
+                    flash.classList.remove("flash-hiden");
+                    flash.classList.add("flash");
+                    flash.innerHTML = status;
+                    setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                        flash.classList.remove("flash");
+                        flash.classList.add("flash-hiden");
+                        flash.innerHTML = "";
+                    }), 2000);
+                }
+                const checkWindow = document.getElementById("check");
+                if (checkWindow)
+                    checkWindow.className = "hidden";
+            }
+        }));
         function correction() {
             const deleteWindow = document.getElementById("delete-options");
             if (deleteWindow)
@@ -87,26 +106,6 @@ class DeleteOption {
             const checkWindow = document.getElementById("check");
             if (checkWindow)
                 checkWindow.className = "hidden";
-        }
-        function fetch2Server() {
-            return __awaiter(this, void 0, void 0, function* () {
-                const csrfToken = document.querySelector("input[name=csrf_token]");
-                try {
-                    const res = yield fetch('/api/option/delete', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken.value
-                        },
-                        body: JSON.stringify({
-                            "name": checkedOptions
-                        })
-                    });
-                }
-                catch (e) {
-                    console.error(e);
-                }
-            });
         }
     }
 }

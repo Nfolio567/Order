@@ -74,49 +74,30 @@ class AddProducts {
             const cancel = document.getElementById("add-products-cancel");
             cancel === null || cancel === void 0 ? void 0 : cancel.addEventListener('click', correction);
             const addSubmit = document.getElementById("add-products-submit");
-            addSubmit === null || addSubmit === void 0 ? void 0 : addSubmit.addEventListener("click", () => fetch2Server(checkedOptions));
-        }
-        function correction() {
-            const add = document.getElementById("add-products");
-            if (add)
-                add.className = "add-background";
-            closeAddCheckWindow();
-        }
-        function fetch2Server(checkedOptions) {
-            return __awaiter(this, void 0, void 0, function* () {
-                const csrfToken = document.querySelector("input[name=csrf_token]");
-                try {
-                    const res = yield fetch('/api/products/create', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken.value
-                        },
-                        body: JSON.stringify({
-                            name: name.value,
-                            price: price.value,
-                            options: checkedOptions
-                        })
-                    });
-                    const data = yield res.json();
-                    if (data.status) {
-                        const status = data.status;
-                        const flash = document.getElementById("flash");
-                        if (flash) {
-                            flash.classList.remove("flash-hiden");
-                            flash.classList.add("flash");
-                            flash.innerHTML = status;
-                            setTimeout(() => __awaiter(this, void 0, void 0, function* () {
-                                flash.classList.remove("flash");
-                                flash.classList.add("flash-hiden");
-                                flash.innerHTML = "";
-                            }), 2000);
-                        }
-                        closeAddCheckWindow();
-                        const productsElement = document.getElementById("products");
-                        const newProduct = data.newContent;
-                        if (productsElement) {
-                            productsElement.insertAdjacentHTML("beforeend", `<div class="product">
+            addSubmit === null || addSubmit === void 0 ? void 0 : addSubmit.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+                const data = yield fetch2Server({
+                    "name": name.value,
+                    "price": price.value,
+                    "options": checkedOptions
+                }, '/api/products/create', 'POST');
+                if (data.status) {
+                    const status = data.status;
+                    const flash = document.getElementById("flash");
+                    if (flash) {
+                        flash.classList.remove("flash-hiden");
+                        flash.classList.add("flash");
+                        flash.innerHTML = status;
+                        setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                            flash.classList.remove("flash");
+                            flash.classList.add("flash-hiden");
+                            flash.innerHTML = "";
+                        }), 2000);
+                    }
+                    closeAddCheckWindow();
+                    const productsElement = document.getElementById("products");
+                    const newProduct = data.newContent;
+                    if (productsElement) {
+                        productsElement.insertAdjacentHTML("beforeend", `<div class="product">
                 <div style="display: flex; align-items: center;">
                   <h1 class="id">${newProduct.id}: </h1>
                   <h2 class="product-name">${newProduct.name}</h2>
@@ -124,13 +105,15 @@ class AddProducts {
                 <h2 class="product-price">${moneyFormatter.format(newProduct.price)}</h2>
                 <h2 class="product-options">${newProduct.options}</h2>
               </div>`);
-                        }
                     }
                 }
-                catch (e) {
-                    console.error(e);
-                }
-            });
+            }));
+        }
+        function correction() {
+            const add = document.getElementById("add-products");
+            if (add)
+                add.className = "add-background";
+            closeAddCheckWindow();
         }
     }
 }

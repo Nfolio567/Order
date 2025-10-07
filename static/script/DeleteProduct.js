@@ -47,26 +47,8 @@ class DeleteProduct {
         const submitDeleteProduct = document.getElementById("submit-delete-product");
         submitDeleteProduct === null || submitDeleteProduct === void 0 ? void 0 : submitDeleteProduct.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
             closeWindow();
-            const csrfToken = document.querySelector("input[name=csrf_token]");
-            try {
-                const res = yield fetch('/api/products/delete', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken.value
-                    },
-                    body: JSON.stringify({
-                        "id": parseInt(id)
-                    })
-                });
-                const data = yield res.json();
-                if (data.status) {
-                }
-            }
-            catch (e) {
-                console.error(e);
-            }
-            finally {
+            const data = yield fetch2Server({ "id": parseInt(id) }, '/api/products/delete', 'POST');
+            if (data.status) {
             }
         }));
         function closeDeleteWindow() {

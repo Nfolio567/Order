@@ -70,31 +70,31 @@ class DeleteOption {
     deleteCorrectionButton?.addEventListener('click', correction);
 
     const deleteButton = document.getElementById("delete-button-option");
-    deleteButton?.addEventListener('click', fetch2Server);
+    deleteButton?.addEventListener('click', async () => {
+      const data = await fetch2Server({"name": checkedOptions}, '/api/options/delete', 'POST');
+      if (data.status) {
+        const status = data.status;
+        const flash = document.getElementById("flash");
+        if (flash) {
+          flash.classList.remove("flash-hiden");
+          flash.classList.add("flash");
+          flash.innerHTML = status;
+          setTimeout(async () => {
+            flash.classList.remove("flash")
+            flash.classList.add("flash-hiden");
+            flash.innerHTML = "";
+          }, 2000);
+        }
+        const checkWindow = document.getElementById("check");
+        if(checkWindow) checkWindow.className = "hidden";
+      }
+    });
 
     function correction() {
       const deleteWindow = document.getElementById("delete-options");
       if(deleteWindow) deleteWindow.className = "add-background";
       const checkWindow = document.getElementById("check");
       if(checkWindow) checkWindow.className = "hidden";
-    }
-    
-    async function fetch2Server() {
-      const csrfToken = document.querySelector("input[name=csrf_token]") as HTMLInputElement;
-      try {
-        const res = await fetch('/api/option/delete', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken.value
-          },
-          body: JSON.stringify({
-            "name": checkedOptions
-          })
-        });
-      } catch (e) {
-        console.error(e);
-      }
     }
   }
 }

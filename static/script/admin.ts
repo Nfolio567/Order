@@ -18,6 +18,24 @@ function closeAddCheckWindow() {
   if (addhCheck) addhCheck.className = "hidden";
 }
 
+async function fetch2Server(content: object, URL: string, method: string) {
+  try {
+    const csrfToken = document.querySelector("input[name=csrf_token]") as HTMLInputElement;
+    const res = await fetch(URL, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken.value
+      },
+      body: JSON.stringify(content)
+    })
+
+    return res.json();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 
 window.addEventListener("DOMContentLoaded", async () => { // 初回ロードで商品一覧取得しーの表示
   try{

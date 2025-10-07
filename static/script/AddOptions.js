@@ -40,7 +40,27 @@ class AddOptions {
       `;
             const submit = document.getElementById("add-options-submit");
             const cancel = document.getElementById("add-options-cancel");
-            submit === null || submit === void 0 ? void 0 : submit.addEventListener('click', fetch2Server);
+            submit === null || submit === void 0 ? void 0 : submit.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
+                const data = yield fetch2Server({
+                    "name": name.value,
+                    "price": price.value
+                }, '/api/options/create', 'POST');
+                if (data.status) {
+                    const status = data.status;
+                    const flash = document.getElementById("flash");
+                    if (flash) {
+                        flash.classList.remove("flash-hiden");
+                        flash.classList.add("flash");
+                        flash.innerHTML = status;
+                        setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                            flash.classList.remove("flash");
+                            flash.classList.add("flash-hiden");
+                            flash.innerHTML = "";
+                        }), 2000);
+                    }
+                    closeAddCheckWindow();
+                }
+            }));
             cancel === null || cancel === void 0 ? void 0 : cancel.addEventListener('click', correction);
         }
         function correction() {
@@ -48,43 +68,6 @@ class AddOptions {
             if (add)
                 add.className = "add-background";
             closeAddCheckWindow();
-        }
-        function fetch2Server() {
-            return __awaiter(this, void 0, void 0, function* () {
-                const csrfToken = document.querySelector("input[name=csrf_token]");
-                try {
-                    const res = yield fetch('/api/options/create', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken.value
-                        },
-                        body: JSON.stringify({
-                            "name": name.value,
-                            "price": price.value
-                        })
-                    });
-                    const data = yield res.json();
-                    if (data.status) {
-                        const status = data.status;
-                        const flash = document.getElementById("flash");
-                        if (flash) {
-                            flash.classList.remove("flash-hiden");
-                            flash.classList.add("flash");
-                            flash.innerHTML = status;
-                            setTimeout(() => __awaiter(this, void 0, void 0, function* () {
-                                flash.classList.remove("flash");
-                                flash.classList.add("flash-hiden");
-                                flash.innerHTML = "";
-                            }), 2000);
-                        }
-                        closeAddCheckWindow();
-                    }
-                }
-                catch (e) {
-                    console.error(e);
-                }
-            });
         }
     }
 }
