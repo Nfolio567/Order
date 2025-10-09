@@ -1,9 +1,24 @@
 class DeleteOption {
   drawDeleteWindow() {
     closeAddSelector();
-    const deleteWindow = document.getElementById("delete-options");
+    const deleteWindow = document.getElementById("add-delete-update-window");
+    deleteWindow?.insertAdjacentHTML('beforeend', 
+      `
+        <div id="delete-options" class="add-window options">
+          <h1>オプション削除</h1>
+          <div id="select-delete-options" class="select-delete-options"></div>
+          <button id="delete-options-check-button">確認</button>
+        </div>
+      `);
     getOptions();
     if(deleteWindow) deleteWindow.className = "add-background";
+
+    const closeButton = document.getElementById("close");
+    closeButton?.classList.add("options");
+    closeButton?.addEventListener('click', this.closeDeleteWindow);
+
+    const checkDeleteOptions = document.getElementById("delete-options-check-button");
+    checkDeleteOptions?.addEventListener('click', deleteOption.check);
 
     async function getOptions() {
       try {
@@ -23,20 +38,19 @@ class DeleteOption {
       } catch (e) {
         console.error(e);
       }
-      
-      function closeAddSelector() {
-        const addSelecter = document.getElementById("add-select-diarog");
-        if (addSelecter) {
-          selectorTogle = false;
-          addSelecter.className = "hidden"; // セレクター非表示
-        }
-      }
     }
   }
 
   closeDeleteWindow() {
     const deleteWindow = document.getElementById("delete-options");
     if(deleteWindow) deleteWindow.className = "hidden";
+
+    const closeButton = document.getElementById("close");
+    closeButton?.classList.remove("options");
+    closeButton?.removeEventListener('click', this.closeDeleteWindow);
+
+    const container = document.getElementById("delete-options");
+    container?.remove();
   }
 
   check() {

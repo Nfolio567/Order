@@ -32,6 +32,13 @@ class DeleteProduct {
             <p>${element.children[1].innerHTML}</p>
           `); //NOTE: 0: id, 1: name
                     }
+                    else if (element.className.substring(0, 7) === "options") {
+                        Array.from(element.children).forEach((option) => {
+                            checkContent.insertAdjacentHTML('beforeend', `
+                <p>${option.innerHTML}</p>
+              `);
+                        });
+                    }
                     else {
                         checkContent.insertAdjacentHTML("beforeend", `
             <p>${element.innerHTML}</p>
@@ -46,9 +53,22 @@ class DeleteProduct {
             checkWindow.className = "add-background";
         const submitDeleteProduct = document.getElementById("submit-delete-product");
         submitDeleteProduct === null || submitDeleteProduct === void 0 ? void 0 : submitDeleteProduct.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
-            closeWindow();
-            const data = yield fetch2Server({ "id": parseInt(id) }, '/api/products/delete', 'POST');
+            console.log("test1212");
+            const data = yield fetch2Server({ "id": id }, '/api/products/delete', 'POST');
             if (data.status) {
+                const status = data.status;
+                const flash = document.getElementById("flash");
+                if (flash) {
+                    flash.classList.remove("flash-hiden");
+                    flash.classList.add("flash");
+                    flash.innerHTML = status;
+                    setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                        flash.classList.remove("flash");
+                        flash.classList.add("flash-hiden");
+                        flash.innerHTML = "";
+                    }), 2000);
+                }
+                closeWindow();
             }
         }));
         function closeDeleteWindow() {

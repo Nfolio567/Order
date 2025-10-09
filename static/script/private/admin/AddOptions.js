@@ -11,14 +11,36 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 class AddOptions {
     drawAddWindow() {
         closeAddSelector();
-        const addOptions = document.getElementById("add-options");
+        const addOptions = document.getElementById("add-delete-update-window");
+        addOptions === null || addOptions === void 0 ? void 0 : addOptions.insertAdjacentHTML('beforeend', `
+      <div id="add-options" class="add-window options">
+        <h1>オプション追加</h1>
+        <label style="font-size: 50px; font-weight: bold;">NAME:&nbsp;
+          <input style="width: 60%; font-size: 30px;" type="text" name="option-name">
+        </label>
+        <label style="font-size: 50px; font-weight: bold;">PRICE:&nbsp;¥
+          <input style="width: 60%; font-size: 30px;" type="number" name="option-price" min="0" max="10000">
+        </label>
+        <button id="add-options-check-button">確認</button>
+      </div>
+    `);
+        const closeButton = document.getElementById("close");
+        closeButton === null || closeButton === void 0 ? void 0 : closeButton.classList.add("options");
+        closeButton === null || closeButton === void 0 ? void 0 : closeButton.addEventListener('click', this.closeAddWindow);
+        const addOptionsCheckButton = document.getElementById("add-options-check-button");
+        addOptionsCheckButton === null || addOptionsCheckButton === void 0 ? void 0 : addOptionsCheckButton.addEventListener('click', this.checkAdd);
         if (addOptions)
             addOptions.className = "add-background";
     }
     closeAddWindow() {
-        const addOptions = document.getElementById("add-options");
+        const addOptions = document.getElementById("add-delete-update-window");
         if (addOptions)
             addOptions.className = "hidden";
+        const closeButton = document.getElementById("close");
+        closeButton === null || closeButton === void 0 ? void 0 : closeButton.classList.remove("options");
+        closeButton === null || closeButton === void 0 ? void 0 : closeButton.removeEventListener('click', this.closeAddWindow);
+        const container = document.getElementById("add-options");
+        container === null || container === void 0 ? void 0 : container.remove();
     }
     checkAdd() {
         const name = document.querySelector("input[name=option-name]");

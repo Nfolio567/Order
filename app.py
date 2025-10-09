@@ -1,9 +1,7 @@
 from gevent import monkey
-
-from util import gen_base36
-
 monkey.patch_all()
 
+from util import gen_base36
 import json
 import bcrypt
 from flask import Flask, render_template, redirect, url_for, jsonify, request, Response
@@ -78,7 +76,8 @@ def return_products():
     for i in products:
       options = []
       for j in i.options:
-        options.append(j.name)
+        options.append({"name": j.name, "price": j.price})
+        print(j.price)
       products_list.append({"id": i.id, "name": i.name, "price": i.price, "options": options})
     products_2_json = jsonify(products_list)
     print(products_2_json)
@@ -104,7 +103,7 @@ def create_products():
     db.session.commit()
     new_options = []
     for i in new_product.options:
-      new_options.append(i.name)
+      new_options.append({"name": i.name, "price": i.price})
 
     return jsonify({
       "status": "success",
@@ -121,6 +120,7 @@ def create_products():
 @login_required
 def delete_products():
   data = request.get_json()
+  print(data)
   deleted_id = data.get("id")
   deleted_product = Products.query.filter_by(id=deleted_id).first()
   db.session.delete(deleted_product)
@@ -185,6 +185,11 @@ def login():
 def logout():
   logout_user()
   return redirect(url_for("index"))
+
+@app.route("/settings")
+@login_required
+def settings():
+  return render_template("settings.html")
 
 
 @login_manager.user_loader

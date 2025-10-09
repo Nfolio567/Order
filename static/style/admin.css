@@ -176,12 +176,40 @@ body {
   justify-content: center;
 }
 
-.open-add-selector {
+.menu {
   position: absolute;
-  right: 0;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.open-add-selector {
+  height: 45px;
+  width: 45px;
   background-color: transparent;
   border: none;
-  font-size: 50px;
+  margin: 5px;
+}
+
+.plus {
+  height: 100%;
+  width: auto;
+}
+
+.setting-button {
+  display: inline-block;
+  height: 45px;
+  width: 45px;
+  background-color: transparent;
+  border: none;
+  margin: 5px;
+}
+
+.setting {
+  height: 100%;
+  width: auto;
+  stroke: #404040;
+  stroke-width: 2.3;
 }
 
 .products-header > h2 {

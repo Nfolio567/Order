@@ -1,13 +1,41 @@
 class AddOptions {
   drawAddWindow() { // オプション追加ウィンドウ描画
     closeAddSelector();
-    const addOptions = document.getElementById("add-options");
+    const addOptions = document.getElementById("add-delete-update-window");
+    addOptions?.insertAdjacentHTML('beforeend', 
+    `
+      <div id="add-options" class="add-window options">
+        <h1>オプション追加</h1>
+        <label style="font-size: 50px; font-weight: bold;">NAME:&nbsp;
+          <input style="width: 60%; font-size: 30px;" type="text" name="option-name">
+        </label>
+        <label style="font-size: 50px; font-weight: bold;">PRICE:&nbsp;¥
+          <input style="width: 60%; font-size: 30px;" type="number" name="option-price" min="0" max="10000">
+        </label>
+        <button id="add-options-check-button">確認</button>
+      </div>
+    `);
+
+    const closeButton = document.getElementById("close");
+    closeButton?.classList.add("options");
+    closeButton?.addEventListener('click', this.closeAddWindow);
+
+    const addOptionsCheckButton = document.getElementById("add-options-check-button");
+    addOptionsCheckButton?.addEventListener('click', this.checkAdd);
+
     if(addOptions) addOptions.className = "add-background";
   }
 
   closeAddWindow() { // 閉じる
-    const addOptions = document.getElementById("add-options");
+    const addOptions = document.getElementById("add-delete-update-window");
     if(addOptions) addOptions.className = "hidden";
+
+    const closeButton = document.getElementById("close");
+    closeButton?.classList.remove("options");
+    closeButton?.removeEventListener('click', this.closeAddWindow);
+
+    const container = document.getElementById("add-options");
+    container?.remove();
   }
 
   checkAdd() {

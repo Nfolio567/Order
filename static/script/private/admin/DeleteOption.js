@@ -11,10 +11,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 class DeleteOption {
     drawDeleteWindow() {
         closeAddSelector();
-        const deleteWindow = document.getElementById("delete-options");
+        const deleteWindow = document.getElementById("add-delete-update-window");
+        deleteWindow === null || deleteWindow === void 0 ? void 0 : deleteWindow.insertAdjacentHTML('beforeend', `
+        <div id="delete-options" class="add-window options">
+          <h1>オプション削除</h1>
+          <div id="select-delete-options" class="select-delete-options"></div>
+          <button id="delete-options-check-button">確認</button>
+        </div>
+      `);
         getOptions();
         if (deleteWindow)
             deleteWindow.className = "add-background";
+        const closeButton = document.getElementById("close");
+        closeButton === null || closeButton === void 0 ? void 0 : closeButton.classList.add("options");
+        closeButton === null || closeButton === void 0 ? void 0 : closeButton.addEventListener('click', this.closeDeleteWindow);
+        const checkDeleteOptions = document.getElementById("delete-options-check-button");
+        checkDeleteOptions === null || checkDeleteOptions === void 0 ? void 0 : checkDeleteOptions.addEventListener('click', deleteOption.check);
         function getOptions() {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
@@ -35,13 +47,6 @@ class DeleteOption {
                 catch (e) {
                     console.error(e);
                 }
-                function closeAddSelector() {
-                    const addSelecter = document.getElementById("add-select-diarog");
-                    if (addSelecter) {
-                        selectorTogle = false;
-                        addSelecter.className = "hidden"; // セレクター非表示
-                    }
-                }
             });
         }
     }
@@ -49,6 +54,11 @@ class DeleteOption {
         const deleteWindow = document.getElementById("delete-options");
         if (deleteWindow)
             deleteWindow.className = "hidden";
+        const closeButton = document.getElementById("close");
+        closeButton === null || closeButton === void 0 ? void 0 : closeButton.classList.remove("options");
+        closeButton === null || closeButton === void 0 ? void 0 : closeButton.removeEventListener('click', this.closeDeleteWindow);
+        const container = document.getElementById("delete-options");
+        container === null || container === void 0 ? void 0 : container.remove();
     }
     check() {
         const options = document.getElementsByName("deleted-options");

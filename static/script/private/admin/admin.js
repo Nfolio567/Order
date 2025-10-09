@@ -50,6 +50,7 @@ window.addEventListener("DOMContentLoaded", () => __awaiter(void 0, void 0, void
         const datas = yield res.json();
         const productsElement = document.getElementById("products");
         if (productsElement) {
+            let count = 0;
             datas.forEach((data) => {
                 productsElement.insertAdjacentHTML("beforeend", `<div class="product">
             <div class="ud-container">
@@ -74,8 +75,16 @@ window.addEventListener("DOMContentLoaded", () => __awaiter(void 0, void 0, void
               <h2 class="product-name">${data.name}</h2>
             </div>
             <h2 class="product-price">${moneyFormatter.format(data.price)}</h2>
-            <h2 class="product-options">${data.options}</h2>
+            <div id="options${count}"></div>
           </div>`);
+                if (data.options.length != 0) {
+                    const options = document.getElementById(`options${count}`);
+                    data.options.forEach((option) => {
+                        if (options)
+                            options.insertAdjacentHTML('beforeend', `<h2 class="product-options">${option.name}&nbsp;+${moneyFormatter.format(Number(option.price))}</h2>`);
+                    });
+                }
+                count++;
             });
         }
         document.dispatchEvent(productsLoadedEvent);
@@ -98,29 +107,39 @@ openAddSelector === null || openAddSelector === void 0 ? void 0 : openAddSelecto
 });
 const addProducts = new AddProducts();
 const addButtonProduct = document.getElementById("add-button-product");
-addButtonProduct === null || addButtonProduct === void 0 ? void 0 : addButtonProduct.addEventListener('click', addProducts.drawAddWindow);
-const closeAddProducts = document.getElementById("close-add-products");
-closeAddProducts === null || closeAddProducts === void 0 ? void 0 : closeAddProducts.addEventListener("click", addProducts.closeAddWindow);
-const addProductsCheckBotton = document.getElementById("add-products-check-button");
-addProductsCheckBotton === null || addProductsCheckBotton === void 0 ? void 0 : addProductsCheckBotton.addEventListener("click", addProducts.checkAdd);
+addButtonProduct === null || addButtonProduct === void 0 ? void 0 : addButtonProduct.addEventListener('click', addProducts.drawAddWindow.bind(addProducts));
 const addOptions = new AddOptions();
 const addButtonOptions = document.getElementById("add-button-options");
-addButtonOptions === null || addButtonOptions === void 0 ? void 0 : addButtonOptions.addEventListener('click', addOptions.drawAddWindow);
-const closeAddOptions = document.getElementById("close-add-options");
-closeAddOptions === null || closeAddOptions === void 0 ? void 0 : closeAddOptions.addEventListener('click', addOptions.closeAddWindow);
-const addOptionsCheckButton = document.getElementById("add-options-check-button");
-addOptionsCheckButton === null || addOptionsCheckButton === void 0 ? void 0 : addOptionsCheckButton.addEventListener('click', addOptions.checkAdd);
-const deleteProduct = new DeleteProduct();
-const deleteButtonProduct = document.getElementsByClassName("delete-product");
-document.addEventListener('productsLoaded', () => {
-    Array.from(deleteButtonProduct).forEach((button) => {
-        button.addEventListener('click', () => { var _a, _b; return deleteProduct.drawCheckWindow((_b = (_a = button.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.children); });
-    });
-});
+addButtonOptions === null || addButtonOptions === void 0 ? void 0 : addButtonOptions.addEventListener('click', addOptions.drawAddWindow.bind(addOptions));
 const deleteOption = new DeleteOption();
 const deleteButtonOption = document.getElementById("delete-button-options");
-deleteButtonOption === null || deleteButtonOption === void 0 ? void 0 : deleteButtonOption.addEventListener('click', deleteOption.drawDeleteWindow);
-const closeDeleteOptions = document.getElementById("close-delete-options");
-closeDeleteOptions === null || closeDeleteOptions === void 0 ? void 0 : closeDeleteOptions.addEventListener('click', deleteOption.closeDeleteWindow);
-const checkDeleteOptions = document.getElementById("delete-options-check-button");
-checkDeleteOptions === null || checkDeleteOptions === void 0 ? void 0 : checkDeleteOptions.addEventListener('click', deleteOption.check);
+deleteButtonOption === null || deleteButtonOption === void 0 ? void 0 : deleteButtonOption.addEventListener('click', deleteOption.drawDeleteWindow.bind(deleteOption));
+const deleteProduct = new DeleteProduct();
+const deleteButtonsProduct = document.getElementsByClassName("delete-product");
+document.addEventListener('productsLoaded', () => addListener2TrashLogo());
+const deleteButtonObserver = new MutationObserver(addListener2TrashLogo);
+function addListener2TrashLogo() {
+    Array.from(deleteButtonsProduct).forEach((button) => {
+        button.removeEventListener('click', () => { var _a, _b; return deleteProduct.drawCheckWindow((_b = (_a = button.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.children); });
+        button.addEventListener('click', () => { var _a, _b; return deleteProduct.drawCheckWindow((_b = (_a = button.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.children); });
+    });
+}
+const updateProducts = new UpdateProducts();
+const updateButtonsProduct = document.getElementsByClassName("update-product");
+document.addEventListener('productsLoaded', addListener2UpdateLogo);
+const updateButtonObserver = new MutationObserver(addListener2UpdateLogo);
+function addListener2UpdateLogo() {
+    Array.from(updateButtonsProduct).forEach((button) => {
+        button.removeEventListener('click', updateProducts.drawWindow);
+        button.addEventListener('click', updateProducts.drawWindow);
+    });
+}
+const target = document.getElementById("products");
+if (target)
+    deleteButtonObserver.observe(target, {
+        childList: true
+    });
+if (target)
+    updateButtonObserver.observe(target, {
+        childList: true
+    });
