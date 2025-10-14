@@ -67,7 +67,6 @@ def admin():
   return render_template("dashboard.html")
 
 @app.route("/api/products")
-@login_required
 def return_products():
   if request.method == "GET":  # 商品一覧取得
     products = Products.query.all()
@@ -129,7 +128,6 @@ def delete_products():
 
 
 @app.route("/api/options")
-@login_required
 def return_options():  # オプション一覧取得
   options = Options.query.all()
   options_list = []

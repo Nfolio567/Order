@@ -288,3 +288,7 @@ body {
   background-color: transparent;
   border: none;
 }
+
+.edit-window-input {
+  display: inline-block;
+}

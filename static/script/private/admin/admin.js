@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,24 +7,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const moneyFormatter = Intl.NumberFormat('ja-JP', {
+export const moneyFormatter = Intl.NumberFormat('ja-JP', {
     style: 'currency',
     currency: 'JPY'
 });
 const productsLoadedEvent = new CustomEvent('productsLoaded');
-function closeAddSelector() {
+export function closeAddSelector() {
     const addSelecter = document.getElementById("add-select-diarog");
     if (addSelecter) {
         selectorTogle = false;
         addSelecter.className = "hidden"; // セレクター非表示
     }
 }
-function closeAddCheckWindow() {
+export function closeAddCheckWindow() {
     const addhCheck = document.getElementById("check");
     if (addhCheck)
         addhCheck.className = "hidden";
 }
-function fetch2Server(content, URL, method) {
+export function fetch2Server(content, URL, method) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const csrfToken = document.querySelector("input[name=csrf_token]");
@@ -105,6 +104,11 @@ openAddSelector === null || openAddSelector === void 0 ? void 0 : openAddSelecto
             addSelecter.className = "hidden";
     }
 });
+import { AddProducts } from "./AddProducts";
+import { AddOptions } from "./AddOptions";
+import { DeleteOption } from "./DeleteOption";
+import { DeleteProduct } from "./DeleteProduct";
+import { UpdateProducts } from "./UpdateProducts";
 const addProducts = new AddProducts();
 const addButtonProduct = document.getElementById("add-button-product");
 addButtonProduct === null || addButtonProduct === void 0 ? void 0 : addButtonProduct.addEventListener('click', addProducts.drawAddWindow.bind(addProducts));
@@ -130,8 +134,8 @@ document.addEventListener('productsLoaded', addListener2UpdateLogo);
 const updateButtonObserver = new MutationObserver(addListener2UpdateLogo);
 function addListener2UpdateLogo() {
     Array.from(updateButtonsProduct).forEach((button) => {
-        button.removeEventListener('click', updateProducts.drawWindow);
-        button.addEventListener('click', updateProducts.drawWindow);
+        button.onclick = null;
+        button.onclick = () => { var _a, _b; return updateProducts.drawWindow((_b = (_a = button.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.children); };
     });
 }
 const target = document.getElementById("products");

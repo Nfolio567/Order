@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,7 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-class DeleteProduct {
+import { fetch2Server } from "./admin";
+export class DeleteProduct {
     drawCheckWindow(children) {
         console.log(children);
         const checkContent = document.getElementById("check-container");
@@ -32,7 +32,7 @@ class DeleteProduct {
             <p>${element.children[1].innerHTML}</p>
           `); //NOTE: 0: id, 1: name
                     }
-                    else if (element.className.substring(0, 7) === "options") {
+                    else if (element.id.substring(0, 7) === "options") {
                         Array.from(element.children).forEach((option) => {
                             checkContent.insertAdjacentHTML('beforeend', `
                 <p>${option.innerHTML}</p>

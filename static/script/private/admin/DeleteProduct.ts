@@ -1,4 +1,6 @@
-class DeleteProduct {
+import { fetch2Server } from "./admin";
+
+export class DeleteProduct {
   drawCheckWindow(children: HTMLCollection | undefined) {
     console.log(children);
     const checkContent = document.getElementById("check-container");
@@ -19,7 +21,7 @@ class DeleteProduct {
             <p>${id}</p>
             <p>${element.children[1].innerHTML}</p>
           `); //NOTE: 0: id, 1: name
-        } else if(element.className.substring(0, 7) === "options") {
+        } else if(element.id.substring(0, 7) === "options") {
           Array.from(element.children).forEach((option) => {
             checkContent.insertAdjacentHTML('beforeend', 
               `

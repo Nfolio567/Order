@@ -1,11 +1,11 @@
-const moneyFormatter = Intl.NumberFormat('ja-JP', {
+export const moneyFormatter = Intl.NumberFormat('ja-JP', {
   style: 'currency',
   currency: 'JPY'
 });
 
 const productsLoadedEvent = new CustomEvent('productsLoaded');
 
-function closeAddSelector() {
+export function closeAddSelector() {
   const addSelecter = document.getElementById("add-select-diarog");
   if (addSelecter) {
     selectorTogle = false;
@@ -13,12 +13,12 @@ function closeAddSelector() {
   }
 }
 
-function closeAddCheckWindow() {
+export function closeAddCheckWindow() {
   const addhCheck = document.getElementById("check");
   if (addhCheck) addhCheck.className = "hidden";
 }
 
-async function fetch2Server(content: object, URL: string, method: string) {
+export async function fetch2Server(content: object, URL: string, method: string) {
   try {
     const csrfToken = document.querySelector("input[name=csrf_token]") as HTMLInputElement;
     const res = await fetch(URL, {
@@ -44,7 +44,7 @@ window.addEventListener("DOMContentLoaded", async () => { // 初回ロードで�
     const productsElement = document.getElementById("products");
     if (productsElement) {
       let count = 0;
-      datas.forEach((data: { id: any; name: any; options: any; price: any }) => {
+      datas.forEach((data: { id: any, name: any, options: any, price: any }) => {
         productsElement.insertAdjacentHTML("beforeend",  
           `<div class="product">
             <div class="ud-container">
@@ -104,6 +104,12 @@ openAddSelector?.addEventListener('click', () => {
 });
 
 
+import { AddProducts } from "./AddProducts";
+import { AddOptions } from "./AddOptions";
+import { DeleteOption } from "./DeleteOption";
+import { DeleteProduct } from "./DeleteProduct";
+import { UpdateProducts } from "./UpdateProducts";
+
 const addProducts = new AddProducts();
 
 const addButtonProduct = document.getElementById("add-button-product");
@@ -140,15 +146,15 @@ function addListener2TrashLogo() {
 
 const updateProducts = new UpdateProducts();
 
-const updateButtonsProduct = document.getElementsByClassName("update-product");
+const updateButtonsProduct = document.getElementsByClassName("update-product") as HTMLCollectionOf<HTMLButtonElement>;
 document.addEventListener('productsLoaded', addListener2UpdateLogo);
 
 const updateButtonObserver = new MutationObserver(addListener2UpdateLogo);
 
 function addListener2UpdateLogo() {
   Array.from(updateButtonsProduct).forEach((button) => {
-    button.removeEventListener('click', updateProducts.drawWindow);
-    button.addEventListener('click', updateProducts.drawWindow);
+    button.onclick = null;
+    button.onclick = () => updateProducts.drawWindow(button.parentElement?.parentElement?.children);
   });
 }
 

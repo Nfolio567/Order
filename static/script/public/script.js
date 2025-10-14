@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,10 +7,36 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-window.addEventListener('DOMContentLoaded', () => {
+export const moneyFormatter = Intl.NumberFormat('ja-JP', {
+    style: 'currency',
+    currency: 'JPY'
+});
+window.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, void 0, function* () {
     const headerBack = document.getElementById("headerBack");
     headerBack === null || headerBack === void 0 ? void 0 : headerBack.classList.add(location.pathname.substring(1));
-});
+    const productsContaier = document.getElementById("products");
+    try {
+        const res = yield fetch('/api/products');
+        const datas = yield res.json();
+        let count = 0;
+        datas.forEach((data) => {
+            productsContaier === null || productsContaier === void 0 ? void 0 : productsContaier.insertAdjacentHTML('beforeend', `
+          <label><input type="checkbox" name="ordered-products">${data.name} </label>
+          <div id="options${count}"></div>
+        `);
+            Array.from(data.options).forEach((option) => {
+                const thisOptions = document.getElementById(`options${count}`);
+                thisOptions === null || thisOptions === void 0 ? void 0 : thisOptions.insertAdjacentHTML('beforeend', `
+            <label><input type="checkbox" name="this-options${count}">${option}</label>
+          `);
+            });
+            count++;
+        });
+    }
+    catch (e) {
+        console.error(e);
+    }
+}));
 let isVisible = false;
 const adminButton = document.getElementById("admin-button");
 adminButton === null || adminButton === void 0 ? void 0 : adminButton.addEventListener('click', () => {

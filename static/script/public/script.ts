@@ -1,6 +1,35 @@
-window.addEventListener('DOMContentLoaded', () => {
+export const moneyFormatter = Intl.NumberFormat('ja-JP', {
+  style: 'currency',
+  currency: 'JPY'
+});
+
+window.addEventListener('DOMContentLoaded', async () => {
   const headerBack = document.getElementById("headerBack");
   headerBack?.classList.add(location.pathname.substring(1));
+
+  const productsContaier = document.getElementById("products");
+  try {
+    const res = await fetch('/api/products');
+    const datas = await res.json();
+    let count = 0;
+    datas.forEach((data:{id: string, name: string, price: string, options: any}) => {
+      productsContaier?.insertAdjacentHTML('beforeend', 
+        `
+          <label><input type="checkbox" name="ordered-products">${data.name} </label>
+          <div id="options${count}"></div>
+        `);
+      Array.from(data.options).forEach((option) => {
+        const thisOptions = document.getElementById(`options${count}`);
+        thisOptions?.insertAdjacentHTML('beforeend', 
+          `
+            <label><input type="checkbox" name="this-options${count}">${option}</label>
+          `);
+      });
+      count++;
+    });
+  } catch(e) {
+    console.error(e);
+  }
 });
 
 

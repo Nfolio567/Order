@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,7 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-class DeleteOption {
+import { closeAddSelector, fetch2Server, moneyFormatter } from "./admin";
+export class DeleteOption {
     drawDeleteWindow() {
         closeAddSelector();
         const deleteWindow = document.getElementById("add-delete-update-window");
@@ -26,7 +26,7 @@ class DeleteOption {
         closeButton === null || closeButton === void 0 ? void 0 : closeButton.classList.add("options");
         closeButton === null || closeButton === void 0 ? void 0 : closeButton.addEventListener('click', this.closeDeleteWindow);
         const checkDeleteOptions = document.getElementById("delete-options-check-button");
-        checkDeleteOptions === null || checkDeleteOptions === void 0 ? void 0 : checkDeleteOptions.addEventListener('click', deleteOption.check);
+        checkDeleteOptions === null || checkDeleteOptions === void 0 ? void 0 : checkDeleteOptions.addEventListener('click', this.check);
         function getOptions() {
             return __awaiter(this, void 0, void 0, function* () {
                 try {

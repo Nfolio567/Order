@@ -1,4 +1,6 @@
-class AddProducts {
+import { closeAddSelector, fetch2Server, closeAddCheckWindow, moneyFormatter } from "./admin";
+
+export class AddProducts {
   async drawAddWindow() { // 商品追加ウィンドウ描画
     closeAddSelector();
     const res = await fetch('/api/options');

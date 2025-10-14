@@ -1,4 +1,6 @@
-class AddOptions {
+import { closeAddSelector, fetch2Server, closeAddCheckWindow } from "./admin";
+
+export class AddOptions {
   drawAddWindow() { // オプション追加ウィンドウ描画
     closeAddSelector();
     const addOptions = document.getElementById("add-delete-update-window");

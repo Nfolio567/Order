@@ -1,4 +1,6 @@
-class DeleteOption {
+import { closeAddSelector,  fetch2Server, moneyFormatter } from "./admin";
+
+export class DeleteOption {
   drawDeleteWindow() {
     closeAddSelector();
     const deleteWindow = document.getElementById("add-delete-update-window");
@@ -18,7 +20,7 @@ class DeleteOption {
     closeButton?.addEventListener('click', this.closeDeleteWindow);
 
     const checkDeleteOptions = document.getElementById("delete-options-check-button");
-    checkDeleteOptions?.addEventListener('click', deleteOption.check);
+    checkDeleteOptions?.addEventListener('click', this.check);
 
     async function getOptions() {
       try {

@@ -60,7 +60,6 @@ nav {
   border-radius: 10% 10% 10% 10% / 50% 50% 50% 50%;
   background-color: rgba(236, 244, 251, 0.8);
   backdrop-filter: blur(2px);
-  /*animation: headerFade 1.5s ease-in-out;*/
 }
 
 nav > a {
@@ -129,6 +128,7 @@ nav > a {
   text-align: center;
   border-radius: 8%;
   font-weight: bold;
+  z-index: 10;
 }
 
 .hidden {
@@ -145,4 +145,23 @@ nav > a {
   color: antiquewhite;
   font-weight: bold;
   font-size: 16px;
+}
+
+.order-submit {
+  position: fixed;
+  right: 10px;
+  width: 25vw;
+  height: 10vw;
+  top: 150px;
+  border-radius: 10px;
+  border: none;
+  font-size: 40px;
+  color: antiquewhite;
+  background-color: rgba(75, 77, 150, 0.75);
+  backdrop-filter: blur(3px);
+  z-index: 0;
+}
+
+.order-container {
+  background-color: antiquewhite;
 }
