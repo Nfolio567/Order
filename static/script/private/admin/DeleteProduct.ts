@@ -1,4 +1,4 @@
-import { fetch2Server } from "./admin";
+import { fetch2Server } from "./admin.js";
 
 export class DeleteProduct {
   drawCheckWindow(children: HTMLCollection | undefined) {

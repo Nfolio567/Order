@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { closeAddSelector, fetch2Server, moneyFormatter } from "./admin";
+import { closeAddSelector, fetch2Server, moneyFormatter } from "./admin.js";
 export class DeleteOption {
     drawDeleteWindow() {
         closeAddSelector();
@@ -51,7 +51,7 @@ export class DeleteOption {
         }
     }
     closeDeleteWindow() {
-        const deleteWindow = document.getElementById("delete-options");
+        const deleteWindow = document.getElementById("add-delete-update-window");
         if (deleteWindow)
             deleteWindow.className = "hidden";
         const closeButton = document.getElementById("close");

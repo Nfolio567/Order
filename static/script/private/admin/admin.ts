@@ -36,6 +36,23 @@ export async function fetch2Server(content: object, URL: string, method: string)
   }
 }
 
+const openAddSelector = document.getElementById("open-add-selector");
+let selectorTogle = false;
+openAddSelector?.addEventListener('click', () => {
+  selectorTogle = !selectorTogle;
+  const addSelecter = document.getElementById("add-select-diarog");
+  if (addSelecter) {
+    if (selectorTogle) addSelecter.className = "add-select-diarog"; // セレクター表示
+    else addSelecter.className = "hidden";
+  }
+});
+
+
+import { DeleteOption } from "./DeleteOption.js";
+import { AddProducts } from "./AddProducts.js";
+import { AddOptions } from "./AddOptions.js";
+import { DeleteProduct } from "./DeleteProduct.js";
+import { UpdateProducts } from "./UpdateProducts.js";
 
 window.addEventListener("DOMContentLoaded", async () => { // 初回ロードで商品一覧取得しーの表示
   try{
@@ -89,81 +106,62 @@ window.addEventListener("DOMContentLoaded", async () => { // 初回ロードで�
   } catch (e) {
     console.error(e);
   }
-});
+
+  const addProducts = new AddProducts();
+
+  const addButtonProduct = document.getElementById("add-button-product");
+  addButtonProduct?.addEventListener('click', addProducts.drawAddWindow.bind(addProducts));
 
 
-const openAddSelector = document.getElementById("open-add-selector");
-let selectorTogle = false;
-openAddSelector?.addEventListener('click', () => {
-  selectorTogle = !selectorTogle;
-  const addSelecter = document.getElementById("add-select-diarog");
-  if (addSelecter) {
-    if (selectorTogle) addSelecter.className = "add-select-diarog"; // セレクター表示
-    else addSelecter.className = "hidden";
+  const addOptions = new AddOptions();
+
+  const addButtonOptions = document.getElementById("add-button-options");
+  addButtonOptions?.addEventListener('click', addOptions.drawAddWindow.bind(addOptions));
+
+
+  const deleteOption = new DeleteOption();
+
+  const deleteButtonOption = document.getElementById("delete-button-options");
+  deleteButtonOption?.addEventListener('click', deleteOption.drawDeleteWindow.bind(deleteOption));
+
+
+  const deleteProduct = new DeleteProduct();
+
+  const deleteButtonsProduct = document.getElementsByClassName("delete-product") as HTMLCollectionOf<HTMLButtonElement>;
+  document.addEventListener('productsLoaded', () => addListener2TrashLogo());
+
+  const deleteButtonObserver = new MutationObserver(addListener2TrashLogo);
+
+
+  function addListener2TrashLogo() {
+    Array.from(deleteButtonsProduct).forEach((button) => {
+      button.onclick = null;
+      button.onclick = () => deleteProduct.drawCheckWindow(button.parentElement?.parentElement?.children);
+    });
   }
-});
 
 
-import { AddProducts } from "./AddProducts";
-import { AddOptions } from "./AddOptions";
-import { DeleteOption } from "./DeleteOption";
-import { DeleteProduct } from "./DeleteProduct";
-import { UpdateProducts } from "./UpdateProducts";
+  const updateProducts = new UpdateProducts();
 
-const addProducts = new AddProducts();
+  const updateButtonsProduct = document.getElementsByClassName("update-product") as HTMLCollectionOf<HTMLButtonElement>;
+  document.addEventListener('productsLoaded', addListener2UpdateLogo);
 
-const addButtonProduct = document.getElementById("add-button-product");
-addButtonProduct?.addEventListener('click', addProducts.drawAddWindow.bind(addProducts));
+  const updateButtonObserver = new MutationObserver(addListener2UpdateLogo);
 
-
-const addOptions = new AddOptions();
-
-const addButtonOptions = document.getElementById("add-button-options");
-addButtonOptions?.addEventListener('click', addOptions.drawAddWindow.bind(addOptions));
+  function addListener2UpdateLogo() {
+    Array.from(updateButtonsProduct).forEach((button) => {
+      button.onclick = null;
+      button.onclick = () => updateProducts.drawWindow(button.parentElement?.parentElement?.children);
+    });
+  }
 
 
-const deleteOption = new DeleteOption();
-
-const deleteButtonOption = document.getElementById("delete-button-options");
-deleteButtonOption?.addEventListener('click', deleteOption.drawDeleteWindow.bind(deleteOption));
-
-
-const deleteProduct = new DeleteProduct();
-
-const deleteButtonsProduct = document.getElementsByClassName("delete-product") as HTMLCollectionOf<HTMLButtonElement>;
-document.addEventListener('productsLoaded', () => addListener2TrashLogo());
-
-const deleteButtonObserver = new MutationObserver(addListener2TrashLogo);
-
-
-function addListener2TrashLogo() {
-  Array.from(deleteButtonsProduct).forEach((button) => {
-    button.removeEventListener('click', () => deleteProduct.drawCheckWindow(button.parentElement?.parentElement?.children));
-    button.addEventListener('click', () => deleteProduct.drawCheckWindow(button.parentElement?.parentElement?.children));
+  const target = document.getElementById("products");
+  if(target) deleteButtonObserver.observe(target, {
+    childList: true
   });
-}
 
-
-const updateProducts = new UpdateProducts();
-
-const updateButtonsProduct = document.getElementsByClassName("update-product") as HTMLCollectionOf<HTMLButtonElement>;
-document.addEventListener('productsLoaded', addListener2UpdateLogo);
-
-const updateButtonObserver = new MutationObserver(addListener2UpdateLogo);
-
-function addListener2UpdateLogo() {
-  Array.from(updateButtonsProduct).forEach((button) => {
-    button.onclick = null;
-    button.onclick = () => updateProducts.drawWindow(button.parentElement?.parentElement?.children);
+  if(target) updateButtonObserver.observe(target, {
+    childList: true
   });
-}
-
-
-const target = document.getElementById("products");
-if(target) deleteButtonObserver.observe(target, {
-  childList: true
-});
-
-if(target) updateButtonObserver.observe(target, {
-  childList: true
 });

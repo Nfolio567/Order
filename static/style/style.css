@@ -15,8 +15,23 @@
 }
 
 body {
-  background: url("../image/frute.png") top center / cover repeat;
+  background-image: url("../image/container_background.png");
+  background-attachment: local;
+  background-position: 60% 52%;
+  background-size: cover;
+}
+
+.background {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../image/background.png");
+  background-attachment: local;
+  background-position: 60% 52%;
+  background-size: cover;
   background-color: rgb(248, 245, 212);
+  z-index: 0;
 }
 
 .flash {
@@ -46,6 +61,7 @@ header {
   position: fixed;
   height: 50px;
   width: 100vw;
+  top: 0;
   z-index: 1000;
 }
 
@@ -58,7 +74,7 @@ nav {
   height: 35px;
   width: 200px;
   border-radius: 10% 10% 10% 10% / 50% 50% 50% 50%;
-  background-color: rgba(236, 244, 251, 0.8);
+  background-color: #df9e09;
   backdrop-filter: blur(2px);
 }
 
@@ -75,7 +91,7 @@ nav > a {
 
 .headerBack {
   position: absolute;
-  background-color: #909090;
+  background-color: rgba(148, 148, 148, 0.7);
   z-index: 1100;
   height: 30px;
   border-radius: 10% 10% 10% 10% / 50% 50% 50% 50%;
@@ -163,5 +179,51 @@ nav > a {
 }
 
 .order-container {
-  background-color: antiquewhite;
+  background-color: rgba(236, 244, 251, 0.8);
+  width: 70vw;
+  margin-left: 1.5vw;
+  margin-top: 100px;
+  backdrop-filter: blur(3px);
+  border-radius: 20px 0 / 20px 0;
+}
+
+.products-container {
+  position: relative;
+  display: flex;
+  margin: 20px;
+  border: dashed 2px #353535;
+  border-radius: 20px 0 / 20px 0;
+  background: url("../image/container_background.png");
+}
+
+.products-container .name {
+  max-width: 70%;
+}
+
+.products-name {
+  font-size: 50px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.products-name input[type="checkbox"] {
+  transform: scale(3) translateY(-4px) translateX(6px);
+}
+
+label strong {
+  font-size: 30px;
+}
+
+.add-order {
+  position: absolute;
+  top: 50%;
+  background-color: #df9e09;
+  border: none;
+  color: rgb(71, 69, 69);
+  width: 100px;
+  height: 80px;
+  font-size: 30px;
+  transform: translateY(-50%);
+  border-radius: 20px;
+  right: 10px;
 }

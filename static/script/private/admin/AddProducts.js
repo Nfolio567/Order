@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { closeAddSelector, fetch2Server, closeAddCheckWindow, moneyFormatter } from "./admin";
+import { closeAddSelector, fetch2Server, closeAddCheckWindow, moneyFormatter } from "./admin.js";
 export class AddProducts {
     drawAddWindow() {
         return __awaiter(this, void 0, void 0, function* () {

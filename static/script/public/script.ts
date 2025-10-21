@@ -7,25 +7,36 @@ window.addEventListener('DOMContentLoaded', async () => {
   const headerBack = document.getElementById("headerBack");
   headerBack?.classList.add(location.pathname.substring(1));
 
-  const productsContaier = document.getElementById("products");
+  const productsContainer = document.getElementById("products");
   try {
     const res = await fetch('/api/products');
     const datas = await res.json();
     let count = 0;
     datas.forEach((data:{id: string, name: string, price: string, options: any}) => {
-      productsContaier?.insertAdjacentHTML('beforeend', 
+      productsContainer?.insertAdjacentHTML('beforeend', `<div class="products-container" id="products${count}"></div>`);
+      const container = document.getElementById(`products${count}`);
+      container?.insertAdjacentHTML('beforeend', 
         `
-          <label><input type="checkbox" name="ordered-products">${data.name} </label>
-          <div id="options${count}"></div>
+          <div class="name">
+            <label class="products-name"><input type="checkbox" name="ordered-products" value="${data.id}">&nbsp;&nbsp;&nbsp;&nbsp;${data.name}<br><strong>${moneyFormatter.format(Number(data.price))}</strong></label>
+            <div class="products-options"></div>
+          </div>
+          <button class="add-order">追加</button>
         `);
-      Array.from(data.options).forEach((option) => {
-        const thisOptions = document.getElementById(`options${count}`);
+      data.options.forEach((option: {name: string, price: string}) => {
+        const thisOptions = container?.children[0].children[1];
         thisOptions?.insertAdjacentHTML('beforeend', 
           `
-            <label><input type="checkbox" name="this-options${count}">${option}</label>
+            <label><input type="checkbox" name="this-options${count}" value="${option.name}">${option.name}&nbsp;+${moneyFormatter.format(Number(option.price))}</label>
           `);
       });
       count++;
+    });
+    const addOrderButton = document.getElementsByClassName("add-order") as HTMLCollectionOf<HTMLButtonElement>;
+    Array.from(addOrderButton).forEach((button) => {
+      button.addEventListener('click', () => {
+        const productId = button.parentElement?.children
+      })
     });
   } catch(e) {
     console.error(e);

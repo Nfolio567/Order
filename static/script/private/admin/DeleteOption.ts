@@ -1,4 +1,4 @@
-import { closeAddSelector,  fetch2Server, moneyFormatter } from "./admin";
+import { closeAddSelector,  fetch2Server, moneyFormatter } from "./admin.js";
 
 export class DeleteOption {
   drawDeleteWindow() {
@@ -44,7 +44,7 @@ export class DeleteOption {
   }
 
   closeDeleteWindow() {
-    const deleteWindow = document.getElementById("delete-options");
+    const deleteWindow = document.getElementById("add-delete-update-window");
     if(deleteWindow) deleteWindow.className = "hidden";
 
     const closeButton = document.getElementById("close");

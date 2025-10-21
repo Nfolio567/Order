@@ -1,4 +1,4 @@
-import { closeAddSelector, fetch2Server, closeAddCheckWindow } from "./admin";
+import { closeAddSelector, fetch2Server, closeAddCheckWindow } from "./admin.js";
 
 export class AddOptions {
   drawAddWindow() { // オプション追加ウィンドウ描画

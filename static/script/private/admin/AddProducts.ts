@@ -1,4 +1,4 @@
-import { closeAddSelector, fetch2Server, closeAddCheckWindow, moneyFormatter } from "./admin";
+import { closeAddSelector, fetch2Server, closeAddCheckWindow, moneyFormatter } from "./admin.js";
 
 export class AddProducts {
   async drawAddWindow() { // 商品追加ウィンドウ描画
