@@ -19,10 +19,8 @@
 }
 
 body {
-  background-image: url("../image/container_background.png");
-  background-attachment: local;
-  background-position: 60% 52%;
-  background-size: cover;
+  margin: 0;
+  padding: 0;
 }
 
 .background {
@@ -168,6 +166,8 @@ nav > a {
   font-size: 16px;
 }
 
+
+/*Order*/
 .order-container {
   background-color: rgba(236, 244, 251, 0.8);
   width: 70vw;
@@ -282,4 +282,18 @@ select[name=order-number] {
   border-radius: 20px 0;
   margin: 10px;
   align-items: center;
+}
+
+
+/*OrderList*/
+.order-list-container {
+  width: 85vw;
+  min-height: 85vh;
+  background-color: rgba(236, 244, 251, 0.8);
+  backdrop-filter: blur(3px);
+  border-radius: 20px 0 / 20px 0;
+  box-shadow: 2px 2px 10px;
+  margin-top: 100px;
+  margin-left: auto;
+  margin-right: auto;
 }

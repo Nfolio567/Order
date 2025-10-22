@@ -49,17 +49,23 @@ def order():
 
 @app.route("/api/list")
 def return_list():
-  orders = {}
+  orders = []
+  count = 0
   for i in range(1, int(os.getenv("PLATE_NUM"))):
     order = Orders.query.filter_by(id=i).first()
     order_items = order.items  # 一人の注文の品の詳細取得
-    if not order.is_provided:  # 注文されてなかったらスキップ
+    if order.is_provided:  # 注文されてなかったらスキップ
       continue
+    orders.append([])
     for j in order_items:  # 注文の詳細たちを処理
-      options = [k.name for k in j.product.options]  # 配列に変換
-      orders[str(i)] = {"ordererId": j.orderer_id, "item": j.product, "options": options, "quantity": j.quantity, "price": j.price}
-
-  return jsonify([orders])
+      options = [k.name for k in j.options]  # 配列に変換
+      orders[count].append({"ordererId": j.orderer_id, "item": j.product.name, "options": options, "quantity": j.quantity, "price": int(j.price)})
+    count += 1
+  print(orders)
+  return Response(
+    json.dumps(orders, ensure_ascii=False),
+    content_type="application/json; charset=utf-8"
+  )
 
 @app.route("/order-submit", methods=["POST"])
 def order_submit():
