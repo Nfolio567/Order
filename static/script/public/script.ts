@@ -1,10 +1,21 @@
-import io from "socket.io-client";
-import { Socket } from "socket.io-client";
-
 export const moneyFormatter = Intl.NumberFormat('ja-JP', {
   style: 'currency',
   currency: 'JPY'
 });
+
+export function flash(data: any) {
+  const flash = document.getElementById("flash");
+  if (flash) {
+    flash.classList.remove("flash-hiden");
+    flash.classList.add("flash");
+    flash.innerHTML = data;
+    setTimeout(async () => {
+      flash.classList.remove("flash")
+      flash.classList.add("flash-hiden");
+      flash.innerHTML = "";
+    }, 2000);
+  }
+}
 
 window.addEventListener('DOMContentLoaded', async () => {
   const headerBack = document.getElementById("headerBack");
@@ -48,17 +59,7 @@ submitButton?.addEventListener('click', async () => {
       if (data.redirect) {
         window.location.href = data.redirect;
       } else if(data.error) {
-        const flash = document.getElementById("flash");
-        if (flash) {
-          flash.classList.remove("flash-hiden");
-          flash.classList.add("flash");
-          flash.innerHTML = data.error;
-          setTimeout(async () => {
-            flash.classList.remove("flash")
-            flash.classList.add("flash-hiden");
-            flash.innerHTML = "";
-          }, 2000);
-        }
+        flash(data.error);
       }
     } catch (e) {
       console.error(e);

@@ -9,7 +9,7 @@ from flask_migrate import Migrate
 from flask_socketio import SocketIO, emit
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager, login_required, logout_user, login_user
-from database import db, Orders, Admin, Products, Options
+from database import db, Orders, Admin, Products, Options, OrderItems
 from dotenv import load_dotenv
 import os
 from sqlalchemy import event
@@ -63,12 +63,26 @@ def return_list():
 
 @app.route("/order-submit", methods=["POST"])
 def order_submit():
-  orders = request.get_json()
+  content = request.get_json()
+  orders = content["Orders"]
+  order_num = content["Order-Number"]
   for i in orders:
     id = i["id"]
-    options = i["options"]
+    option_name = i["options"]
     quantity = i["quantity"]
+    price = i["price"]
+    new_order_items = OrderItems(orderer_id=order_num, product_id=id, quantity=quantity, price=price)
+    db.session.add(new_order_items)
+    db.session.commit()
+    for j in option_name:
+      options = Options.query.filter_by(name=j).first()
+      new_order_items.options.append(options)
+    db.session.commit()
+  order = Orders.query.get(order_num)
+  order.is_provided = False
+  db.session.commit()
 
+  return jsonify({"status": "success"})
 
 @app.route("/dashboard", methods=["GET", "POST"])
 @login_required
@@ -204,16 +218,22 @@ def load_user(user_id):
   return db.session.get(Admin, user_id)
 
 
+@socketio.on('connect')
+def handle_connect():
+  can_provide_things = Orders.query.filter_by(is_provided=True).all()
+  can_provide = [i.id for i in can_provide_things]
+  socketio.emit("canProvide", can_provide)
+
 @event.listens_for(Orders, "after_update")
 def new_order(_, __, target):
   all_order = []
   order_items = target.items
   can_provide_things = Orders.query.filter_by(is_provided=True).all()
   can_provide = [i.id for i in can_provide_things]
-  socketio.emit("canProvide", json.dumps(can_provide))
+  socketio.emit("canProvide", can_provide)
 
   for i in order_items:
-    all_order.append({"id": i.id, "ordererID": i.orerer_id, "product": i.product.name})
+    all_order.append({"id": i.id, "ordererID": i.orderer_id, "product": i.product.name})
   socketio.emit("newOrder", json.dumps({}))
 
 

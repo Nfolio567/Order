@@ -11,6 +11,19 @@ export const moneyFormatter = Intl.NumberFormat('ja-JP', {
     style: 'currency',
     currency: 'JPY'
 });
+export function flash(data) {
+    const flash = document.getElementById("flash");
+    if (flash) {
+        flash.classList.remove("flash-hiden");
+        flash.classList.add("flash");
+        flash.innerHTML = data;
+        setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+            flash.classList.remove("flash");
+            flash.classList.add("flash-hiden");
+            flash.innerHTML = "";
+        }), 2000);
+    }
+}
 window.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, void 0, function* () {
     const headerBack = document.getElementById("headerBack");
     headerBack === null || headerBack === void 0 ? void 0 : headerBack.classList.add(location.pathname.substring(1)); // ヘッダーのやつ
@@ -50,17 +63,7 @@ submitButton === null || submitButton === void 0 ? void 0 : submitButton.addEven
                 window.location.href = data.redirect;
             }
             else if (data.error) {
-                const flash = document.getElementById("flash");
-                if (flash) {
-                    flash.classList.remove("flash-hiden");
-                    flash.classList.add("flash");
-                    flash.innerHTML = data.error;
-                    setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
-                        flash.classList.remove("flash");
-                        flash.classList.add("flash-hiden");
-                        flash.innerHTML = "";
-                    }), 2000);
-                }
+                flash(data.error);
             }
         }
         catch (e) {

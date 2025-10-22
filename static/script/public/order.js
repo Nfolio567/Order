@@ -7,9 +7,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { moneyFormatter } from "./script.js";
+import { moneyFormatter, flash } from "./script.js";
 const orders = []; // サーバーに送る注文内容
 const removeOrderButton = document.getElementsByClassName("remove-order");
+const orderSubmit = document.getElementById("order-submit");
+function money2num(money) {
+    return Number(money.substring(1, money.length).split(",").join(""));
+}
 document.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, void 0, function* () {
     const productsContainer = document.getElementById("products");
     try {
@@ -44,6 +48,11 @@ document.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, vo
                 const container = button.parentElement;
                 const productHiddenInput = container === null || container === void 0 ? void 0 : container.children[0].children[0].children[0];
                 const productIdName = productHiddenInput.value;
+                const stringProductPrice = container === null || container === void 0 ? void 0 : container.children[0].children[0].children[2].innerHTML;
+                const stringOptionPrices = [];
+                const productPrice = money2num(stringProductPrice);
+                const optionPrices = [];
+                let price = 0;
                 const options = container === null || container === void 0 ? void 0 : container.children[0].children[1].children;
                 const orderOptions = [];
                 if (options)
@@ -51,6 +60,9 @@ document.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, vo
                         const optionCheckbox = option.children[0];
                         if (optionCheckbox.checked) {
                             orderOptions.push(optionCheckbox.value);
+                            if (option.textContent)
+                                stringOptionPrices.push(option.textContent.split("+")[1]);
+                            optionPrices.push(money2num(stringOptionPrices[stringOptionPrices.length - 1]));
                         }
                     });
                 console.log(orders);
@@ -61,30 +73,43 @@ document.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, vo
                         const quantity = document.getElementById(`quantity${i}`);
                         if (quantity)
                             quantity.innerHTML = `×${orders[i].quantity}`;
+                        const priceContainer = document.getElementById(`price${i}`);
+                        orders[i].price = orders[i].price * orders[i].quantity;
+                        if (priceContainer)
+                            priceContainer.innerHTML = `合計: ${moneyFormatter.format(orders[i].price)}`;
                         isSame = true;
                     }
                 }
                 if (!isSame) {
                     console.log("test2");
-                    orders.push({ "id": productIdName.split(":")[0], "options": orderOptions, "quantity": 1 });
                     const willOrderList = document.getElementById("will-order-list");
                     willOrderList === null || willOrderList === void 0 ? void 0 : willOrderList.insertAdjacentHTML('beforeend', `
             <div class="order-product-container">
               <div>
                 <input type="hidden" value="${orderListCount}"></input>
                 <p class="order-list-name">${productIdName.split(":")[1]}</p>
-                <p id="quantity${orderListCount}">×${orders[orders.length - 1].quantity}</p>
+                <p>単価: ${stringProductPrice}</p>
+                <p id="quantity${orderListCount}">×1</p>
                 <div id="order${orderListCount}"></div>
+                <p id="price${orderListCount}"></p>
               </div>
               <button class="remove-order">削除</button>
             </div>
           `);
                     const optionsContainer = document.getElementById(`order${orderListCount}`);
-                    orderOptions.forEach((option) => {
+                    for (let i = 0; i < orderOptions.length; i++) {
                         optionsContainer === null || optionsContainer === void 0 ? void 0 : optionsContainer.insertAdjacentHTML('beforeend', `
-              <li>${option}</li>
+              <li>${orderOptions[i]}+${stringOptionPrices[i]}</li>
             `);
+                    }
+                    price = productPrice;
+                    optionPrices.forEach((optionPrice) => {
+                        price += optionPrice;
                     });
+                    const priceContainer = document.getElementById(`price${orderListCount}`);
+                    if (priceContainer)
+                        priceContainer.innerHTML = `合計: ${moneyFormatter.format(price)}`;
+                    orders.push({ "id": productIdName.split(":")[0], "options": orderOptions, "quantity": 1, "price": price });
                     orderListCount++;
                     // 削除ボタンのアクション
                     Array.from(removeOrderButton).forEach((button) => {
@@ -104,9 +129,25 @@ document.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, vo
                                     valueCount++;
                                 });
                             orderListCount = valueCount;
+                            let allPrice = 0;
+                            orders.forEach((order) => {
+                                allPrice += order.price;
+                                console.log(order.price);
+                                console.log(allPrice);
+                            });
+                            if (orderSubmit)
+                                orderSubmit.innerHTML = `${moneyFormatter.format(allPrice)}<br>注文内容を送信`;
                         };
                     });
                 }
+                let allPrice = 0;
+                orders.forEach((order) => {
+                    allPrice += order.price;
+                    console.log(order.price);
+                    console.log(allPrice);
+                });
+                if (orderSubmit)
+                    orderSubmit.innerHTML = `${moneyFormatter.format(allPrice)}<br>注文内容を送信`;
                 isSame = false;
             });
         });
@@ -115,8 +156,10 @@ document.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, vo
         console.error(e);
     }
 }));
-const orderSubmit = document.getElementById("order-submit");
+// 注文送信のアクション
 orderSubmit === null || orderSubmit === void 0 ? void 0 : orderSubmit.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
+    const orderNumSelecter = document.querySelector("select[name=order-number]");
+    const orderNum = orderNumSelecter.value;
     const csrfToken = document.querySelector("input[name=csrf_token]");
     try {
         const res = yield fetch('/order-submit', {
@@ -125,12 +168,34 @@ orderSubmit === null || orderSubmit === void 0 ? void 0 : orderSubmit.addEventLi
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken.value
             },
-            body: JSON.stringify(orders)
+            body: JSON.stringify({
+                'Order-Number': orderNum,
+                'Orders': orders
+            })
         });
         console.log(orders);
+        const data = yield res.json();
+        if (data.status) {
+            flash(data.status);
+        }
     }
     catch (e) {
         console.error(e);
     }
 }));
 const socket = io.connect("http://localhost:6743");
+socket.on('canProvide', (datas) => {
+    const selecter = document.querySelector("select[name=order-number]");
+    const options = selecter.children;
+    Array.from(options).forEach((option) => {
+        const opt = option;
+        opt.disabled = true;
+    });
+    datas.forEach((data) => {
+        const is_provided_num = options[data - 1];
+        is_provided_num.disabled = false;
+    });
+});
+socket.on('connect', () => {
+    console.log("!connect socket.io!");
+});

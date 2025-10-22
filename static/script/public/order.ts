@@ -1,7 +1,13 @@
-import { moneyFormatter } from "./script.js";
+import { data } from "../../../../../node_modules/autoprefixer/lib/autoprefixer.js";
+import { moneyFormatter, flash } from "./script.js";
 
-const orders = [] as {id: string, options: string[], quantity: number}[]; // サーバーに送る注文内容
+const orders = [] as {id: string, options: string[], quantity: number, price: number}[]; // サーバーに送る注文内容
 const removeOrderButton = document.getElementsByClassName("remove-order") as HTMLCollectionOf<HTMLButtonElement>;
+const orderSubmit = document.getElementById("order-submit");
+
+function money2num(money: string) {
+  return Number(money.substring(1, money.length).split(",").join(""))
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
   const productsContainer = document.getElementById("products");
@@ -40,12 +46,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         const container = button.parentElement;
         const productHiddenInput = container?.children[0].children[0].children[0] as HTMLInputElement;
         const productIdName = productHiddenInput.value;
+        const stringProductPrice = container?.children[0].children[0].children[2].innerHTML as string;
+        const stringOptionPrices = [] as string[];
+        const productPrice = money2num(stringProductPrice);
+        const optionPrices = [] as number[];
+        let price = 0;
         const options = container?.children[0].children[1].children as HTMLAllCollection | undefined;
         const orderOptions = [] as string[];
+        
         if (options) Array.from(options).forEach((option) => {
           const optionCheckbox = option.children[0] as HTMLInputElement;
           if(optionCheckbox.checked) {
             orderOptions.push(optionCheckbox.value);
+            if (option.textContent) stringOptionPrices.push(option.textContent.split("+")[1]);
+            optionPrices.push(money2num(stringOptionPrices[stringOptionPrices.length - 1]));
           }
         });
         console.log(orders);
@@ -55,13 +69,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             orders[i].quantity++;
             const quantity = document.getElementById(`quantity${i}`);
             if (quantity) quantity.innerHTML = `×${orders[i].quantity}`;
+            const priceContainer = document.getElementById(`price${i}`);
+            orders[i].price = orders[i].price * orders[i].quantity;
+            if(priceContainer)priceContainer.innerHTML = `合計: ${moneyFormatter.format(orders[i].price)}`
             isSame = true;
           }
         }
         if (!isSame) {
           console.log("test2")
-          orders.push({ "id": productIdName.split(":")[0], "options": orderOptions, "quantity": 1 });
-        
           const willOrderList = document.getElementById("will-order-list");
           willOrderList?.insertAdjacentHTML('beforeend',
             `
@@ -69,20 +84,31 @@ document.addEventListener('DOMContentLoaded', async () => {
               <div>
                 <input type="hidden" value="${orderListCount}"></input>
                 <p class="order-list-name">${productIdName.split(":")[1]}</p>
-                <p id="quantity${orderListCount}">×${orders[orders.length-1].quantity}</p>
+                <p>単価: ${stringProductPrice}</p>
+                <p id="quantity${orderListCount}">×1</p>
                 <div id="order${orderListCount}"></div>
+                <p id="price${orderListCount}"></p>
               </div>
               <button class="remove-order">削除</button>
             </div>
           `);
         
           const optionsContainer = document.getElementById(`order${orderListCount}`);
-          orderOptions.forEach((option) => {
+          for (let i = 0; i < orderOptions.length;i++) {
             optionsContainer?.insertAdjacentHTML('beforeend',
             `
-              <li>${option}</li>
-            `);
+              <li>${orderOptions[i]}+${stringOptionPrices[i]}</li>
+            `); 
+          }
+          
+          price = productPrice
+          optionPrices.forEach((optionPrice) => {
+            price += optionPrice;
           });
+          const priceContainer = document.getElementById(`price${orderListCount}`);
+          if(priceContainer) priceContainer.innerHTML = `合計: ${moneyFormatter.format(price)}`
+          
+          orders.push({ "id": productIdName.split(":")[0], "options": orderOptions, "quantity": 1 , "price": price});
         
           orderListCount++;
           
@@ -104,9 +130,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                 valueCount++;
               })
               orderListCount = valueCount;
+              
+              let allPrice = 0;
+              orders.forEach((order) => {
+                allPrice += order.price;
+                console.log(order.price)
+                console.log(allPrice)
+              });
+              if (orderSubmit) orderSubmit.innerHTML = `${moneyFormatter.format(allPrice)}<br>注文内容を送信`;
             }
           });
         }
+        let allPrice = 0;
+        orders.forEach((order) => {
+          allPrice += order.price;
+          console.log(order.price)
+          console.log(allPrice)
+        });
+        if (orderSubmit) orderSubmit.innerHTML = `${moneyFormatter.format(allPrice)}<br>注文内容を送信`;
+        
         isSame = false;
       });
     });
@@ -116,9 +158,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-
-const orderSubmit = document.getElementById("order-submit");
+// 注文送信のアクション
 orderSubmit?.addEventListener('click', async () => {
+  const orderNumSelecter = document.querySelector("select[name=order-number]") as HTMLSelectElement;
+  const orderNum = orderNumSelecter.value;
   const csrfToken = document.querySelector("input[name=csrf_token]") as HTMLInputElement;
   try {
     const res = await fetch('/order-submit', {
@@ -127,9 +170,16 @@ orderSubmit?.addEventListener('click', async () => {
         'Content-Type': 'application/json',
         'X-CSRFToken': csrfToken.value
       },
-      body: JSON.stringify(orders)
+      body: JSON.stringify({
+        'Order-Number': orderNum,
+        'Orders': orders
+      })
     });
     console.log(orders)
+    const data = await res.json();
+    if(data.status) {
+      flash(data.status);
+    }
   } catch(e) {
     console.error(e);
   }
@@ -137,3 +187,19 @@ orderSubmit?.addEventListener('click', async () => {
 
 const socket = io.connect("http://localhost:6743");
 
+socket.on('canProvide', (datas: Array<number>) => {
+  const selecter = document.querySelector("select[name=order-number]") as HTMLSelectElement;
+  const options = selecter.children;
+  Array.from(options).forEach((option) => {
+    const opt = option as HTMLOptionElement;
+    opt.disabled = true;
+  });
+  datas.forEach((data) => {
+    const is_provided_num = options[data-1] as HTMLOptionElement;
+    is_provided_num.disabled = false;
+  });
+});
+
+socket.on('connect', () => {
+  console.log("!connect socket.io!");
+});
