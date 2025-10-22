@@ -183,7 +183,7 @@ orderSubmit === null || orderSubmit === void 0 ? void 0 : orderSubmit.addEventLi
         console.error(e);
     }
 }));
-const socket = io.connect("http://localhost:6743");
+const socket = io.connect("https://order.nfolio.one");
 socket.on('canProvide', (datas) => {
     const selecter = document.querySelector("select[name=order-number]");
     const options = selecter.children;

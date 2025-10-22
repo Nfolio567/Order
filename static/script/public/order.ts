@@ -185,7 +185,7 @@ orderSubmit?.addEventListener('click', async () => {
   }
 });
 
-const socket = io.connect("http://localhost:6743");
+const socket = io.connect("https://order.nfolio.one");
 
 socket.on('canProvide', (datas: Array<number>) => {
   const selecter = document.querySelector("select[name=order-number]") as HTMLSelectElement;

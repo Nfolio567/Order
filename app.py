@@ -22,7 +22,10 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JSON_AS_ASCII"] = False
 
-socketio = SocketIO(app)
+socketio = SocketIO(
+  app,
+  cors_allowed_origins="https://order.nfolio.one"
+)
 
 db.init_app(app)
 
