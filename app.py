@@ -61,6 +61,15 @@ def return_list():
 
   return jsonify([orders])
 
+@app.route("/order-submit", methods=["POST"])
+def order_submit():
+  orders = request.get_json()
+  for i in orders:
+    id = i["id"]
+    options = i["options"]
+    quantity = i["quantity"]
+
+
 @app.route("/dashboard", methods=["GET", "POST"])
 @login_required
 def admin():
@@ -199,6 +208,10 @@ def load_user(user_id):
 def new_order(_, __, target):
   all_order = []
   order_items = target.items
+  can_provide_things = Orders.query.filter_by(is_provided=True).all()
+  can_provide = [i.id for i in can_provide_things]
+  socketio.emit("canProvide", json.dumps(can_provide))
+
   for i in order_items:
     all_order.append({"id": i.id, "ordererID": i.orerer_id, "product": i.product.name})
   socketio.emit("newOrder", json.dumps({}))

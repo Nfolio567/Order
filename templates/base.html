@@ -35,10 +35,8 @@
     <button id="submit" class="submit">ログイン</button>
   </div>
 
-  <main>
-    {% block main %}
-    {% endblock %}
-  </main>
+  {% block main %}
+  {% endblock %}
 
   <script type="module" src="{{ url_for('static', filename='script/public/script.js') }}"></script>
 </body>

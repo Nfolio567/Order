@@ -1,3 +1,6 @@
+import io from "socket.io-client";
+import { Socket } from "socket.io-client";
+
 export const moneyFormatter = Intl.NumberFormat('ja-JP', {
   style: 'currency',
   currency: 'JPY'
@@ -5,42 +8,7 @@ export const moneyFormatter = Intl.NumberFormat('ja-JP', {
 
 window.addEventListener('DOMContentLoaded', async () => {
   const headerBack = document.getElementById("headerBack");
-  headerBack?.classList.add(location.pathname.substring(1));
-
-  const productsContainer = document.getElementById("products");
-  try {
-    const res = await fetch('/api/products');
-    const datas = await res.json();
-    let count = 0;
-    datas.forEach((data:{id: string, name: string, price: string, options: any}) => {
-      productsContainer?.insertAdjacentHTML('beforeend', `<div class="products-container" id="products${count}"></div>`);
-      const container = document.getElementById(`products${count}`);
-      container?.insertAdjacentHTML('beforeend', 
-        `
-          <div class="name">
-            <label class="products-name"><input type="checkbox" name="ordered-products" value="${data.id}">&nbsp;&nbsp;&nbsp;&nbsp;${data.name}<br><strong>${moneyFormatter.format(Number(data.price))}</strong></label>
-            <div class="products-options"></div>
-          </div>
-          <button class="add-order">追加</button>
-        `);
-      data.options.forEach((option: {name: string, price: string}) => {
-        const thisOptions = container?.children[0].children[1];
-        thisOptions?.insertAdjacentHTML('beforeend', 
-          `
-            <label><input type="checkbox" name="this-options${count}" value="${option.name}">${option.name}&nbsp;+${moneyFormatter.format(Number(option.price))}</label>
-          `);
-      });
-      count++;
-    });
-    const addOrderButton = document.getElementsByClassName("add-order") as HTMLCollectionOf<HTMLButtonElement>;
-    Array.from(addOrderButton).forEach((button) => {
-      button.addEventListener('click', () => {
-        const productId = button.parentElement?.children
-      })
-    });
-  } catch(e) {
-    console.error(e);
-  }
+  headerBack?.classList.add(location.pathname.substring(1)); // ヘッダーのやつ
 });
 
 
@@ -78,10 +46,8 @@ submitButton?.addEventListener('click', async () => {
 
       const data = await res.json();
       if (data.redirect) {
-        console.log(data.redirect);
         window.location.href = data.redirect;
       } else if(data.error) {
-        console.log(data.error);
         const flash = document.getElementById("flash");
         if (flash) {
           flash.classList.remove("flash-hiden");
