@@ -396,3 +396,24 @@ select[name=order-number] {
 .remove-order-list {
   background-color: #759c8a;
 }
+
+/*sales*/
+.sales {
+  background: linear-gradient(transparent 70%, #df9e09 70%);
+  color: rgb(236, 244, 251);
+  text-align: center;
+  font-size: 70px;
+  max-width: 8em;
+  margin: auto;
+  margin-top: 0;
+}
+
+.black-cover {
+  background-color: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(3px);
+}

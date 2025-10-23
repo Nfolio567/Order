@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SALES</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+</head>
+<body>
+  <div class="background">
+    <div class="black-cover">
+      <h1 style="color: rgb(236, 244, 251); text-align: center; font-size: 55px; margin-top: 25%;">売り上げ合計金額</h1>
+      <h1 class="sales">¥{{ sales }}</h1>
+    </div>
+  </div>
+</body>
+</html>
