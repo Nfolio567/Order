@@ -1,7 +1,7 @@
 from gevent import monkey
 monkey.patch_all()
 
-from util import gen_base36
+from util import gen_base36, return_list
 import json
 import bcrypt
 from flask import Flask, render_template, redirect, url_for, jsonify, request, Response
@@ -12,7 +12,7 @@ from flask_login import LoginManager, login_required, logout_user, login_user
 from database import db, Orders, Admin, Products, Options, OrderItems
 from dotenv import load_dotenv
 import os
-from sqlalchemy import event
+from sqlalchemy import event, inspect
 
 load_dotenv()
 
@@ -25,6 +25,7 @@ app.config["JSON_AS_ASCII"] = False
 socketio = SocketIO(
   app,
   cors_allowed_origins="https://order.nfolio.one"
+  #cors_allowed_origins="*"
 )
 
 db.init_app(app)
@@ -37,6 +38,8 @@ csrf.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "index"
+
+
 
 @app.route("/")
 def index():
@@ -51,20 +54,8 @@ def order():
   return render_template("order.html")
 
 @app.route("/api/list")
-def return_list():
-  orders = []
-  count = 0
-  for i in range(1, int(os.getenv("PLATE_NUM"))):
-    order = Orders.query.filter_by(id=i).first()
-    order_items = order.items  # 一人の注文の品の詳細取得
-    if order.is_provided:  # 注文されてなかったらスキップ
-      continue
-    orders.append([])
-    for j in order_items:  # 注文の詳細たちを処理
-      options = [k.name for k in j.options]  # 配列に変換
-      orders[count].append({"ordererId": j.orderer_id, "item": j.product.name, "options": options, "quantity": j.quantity, "price": int(j.price)})
-    count += 1
-  print(orders)
+def return_order_items():
+  orders = return_list()
   return Response(
     json.dumps(orders, ensure_ascii=False),
     content_type="application/json; charset=utf-8"
@@ -80,17 +71,44 @@ def order_submit():
     option_name = i["options"]
     quantity = i["quantity"]
     price = i["price"]
-    new_order_items = OrderItems(orderer_id=order_num, product_id=id, quantity=quantity, price=price)
+    new_order_items = OrderItems(orderer_id=order_num, product_id=id, quantity=quantity, deleted=False, provided=False, price=price)
     db.session.add(new_order_items)
     db.session.commit()
     for j in option_name:
       options = Options.query.filter_by(name=j).first()
       new_order_items.options.append(options)
     db.session.commit()
-  order = Orders.query.get(order_num)
-  order.is_provided = False
+  orders = Orders.query.get(order_num)
+  orders.is_provided = False
   db.session.commit()
 
+  return jsonify({"status": "success"})
+
+@app.route("/api/provide", methods=["POST"])
+def provide():
+  data = request.get_json()
+  orderer_id = data["id"]
+  orders = db.session.get(Orders, orderer_id)
+  orders.is_provided = True
+  order_items = (OrderItems.query
+                 .filter_by(orderer_id=orderer_id)
+                 .filter_by(provided=False)
+                 .filter_by(deleted=False)
+                 .all())
+  for i in order_items:
+    i.provided = True
+
+  db.session.commit()
+  return jsonify({"status": "success"})
+
+@app.route("/api/deleted", methods=['POST'])
+def deleted():
+  data = request.get_json()
+  ids = data["id"]
+  for i in ids:
+    deleted_order_item = db.session.get(OrderItems, i)
+    deleted_order_item.deleted = True
+  db.session.commit()
   return jsonify({"status": "success"})
 
 @app.route("/dashboard", methods=["GET", "POST"])
@@ -234,16 +252,20 @@ def handle_connect():
   socketio.emit("canProvide", can_provide)
 
 @event.listens_for(Orders, "after_update")
-def new_order(_, __, target):
-  all_order = []
-  order_items = target.items
+def new_order(_, __, ___):
   can_provide_things = Orders.query.filter_by(is_provided=True).all()
   can_provide = [i.id for i in can_provide_things]
   socketio.emit("canProvide", can_provide)
 
-  for i in order_items:
-    all_order.append({"id": i.id, "ordererID": i.orderer_id, "product": i.product.name})
-  socketio.emit("newOrder", json.dumps({}))
+  orders = return_list()
+  socketio.emit("newOrder", orders)
+
+@event.listens_for(OrderItems, "after_update")
+def delete_order(_, __, target):
+  state = inspect(target)
+  if state.attrs.deleted.history.has_changes():
+    orders = return_list()
+    socketio.emit("newOrder", orders)
 
 
 if __name__ == "__main__":

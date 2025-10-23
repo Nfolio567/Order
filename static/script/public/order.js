@@ -184,6 +184,7 @@ orderSubmit === null || orderSubmit === void 0 ? void 0 : orderSubmit.addEventLi
     }
 }));
 const socket = io.connect("https://order.nfolio.one");
+//const socket = io.connect("http://127.0.0.1:6743");
 socket.on('canProvide', (datas) => {
     const selecter = document.querySelector("select[name=order-number]");
     const options = selecter.children;

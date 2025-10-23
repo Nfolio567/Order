@@ -45,6 +45,8 @@ class OrderItems(db.Model):
   options = db.relationship("Options", secondary=ordered_options)
   product = db.relationship("Products")
   quantity = db.Column(db.Integer)
+  deleted = db.Column(db.Boolean)
+  provided = db.Column(db.Boolean)
   price = db.Column(db.Numeric(10, 0))
 
 class Admin(db.Model, UserMixin):
