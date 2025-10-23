@@ -6,6 +6,7 @@ function drawOrderItems(datas: Array<Array<{id: number, ordererId: number, item:
   
   let count = 0;
   datas.forEach((data) => {
+    if (data.length == 0) return;
     console.log(data)
     container?.insertAdjacentHTML('beforeend', 
       `

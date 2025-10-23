@@ -14,6 +14,8 @@ function drawOrderItems(datas) {
         container.innerHTML = "";
     let count = 0;
     datas.forEach((data) => {
+        if (data.length == 0)
+            return;
         console.log(data);
         container === null || container === void 0 ? void 0 : container.insertAdjacentHTML('beforeend', `
         <div style="display: flex; width: 100%;">
