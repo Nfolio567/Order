@@ -72,7 +72,8 @@ function util(datas, productsContainer) {
                     if (quantity)
                         quantity.innerHTML = `×${orders[i].quantity}`;
                     const priceContainer = document.getElementById(`price${i}`);
-                    orders[i].price = orders[i].price * orders[i].quantity;
+                    console.log(orders[i].quantity);
+                    orders[i].price += orders[i].price / (orders[i].quantity - 1);
                     if (priceContainer)
                         priceContainer.innerHTML = `合計: ${moneyFormatter.format(orders[i].price)}`;
                     isSame = true;
@@ -199,6 +200,7 @@ document.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, vo
 const socket = io.connect("https://order.nfolio.one");
 //const socket = io.connect("http://127.0.0.1:6743");
 socket.on('canProvide', (datas) => {
+    console.log(datas);
     const selecter = document.querySelector("select[name=order-number]");
     const options = selecter.children;
     Array.from(options).forEach((option) => {

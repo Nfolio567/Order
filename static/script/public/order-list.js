@@ -11,7 +11,15 @@ import { flash } from "./script.js";
 function drawOrderItems(datas) {
     const container = document.getElementById("order-list-container");
     if (container)
-        container.innerHTML = "";
+        container.innerHTML =
+            `
+    <div class="order-list-header">
+      <p class="provide-num">番号</p>
+      <p class="provide-item">商品名</p>
+      <p class="provide-options">オプション</p>
+      <p class="provide-quantity">数量</p>
+    </div>
+  `;
     let count = 0;
     datas.forEach((data) => {
         if (data.length == 0)

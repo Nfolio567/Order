@@ -17,7 +17,7 @@ def return_list():
       continue
     orders.append([])
     for j in order_items:  # 注文の詳細たちを処理
-      if j.provided or j.deleted:
+      if (j.deleted and not j.provided) or (j.provided and not j.deleted):
         continue
       options = [k.name for k in j.options]  # 配列に変換
       orders[count].append({"id": j.id, "ordererId": j.orderer_id, "item": j.product.name, "options": options, "quantity": j.quantity, "price": int(j.price)})

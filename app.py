@@ -40,7 +40,6 @@ login_manager.init_app(app)
 login_manager.login_view = "index"
 
 
-
 @app.route("/")
 def index():
   return redirect(url_for("order_list"))
@@ -105,11 +104,23 @@ def provide():
 def deleted():
   data = request.get_json()
   ids = data["id"]
+  deleted_order_id = db.session.get(OrderItems, ids[0]).orderer_id
+  deleted_order = db.session.get(Orders, deleted_order_id)
+  deleted_order.is_provided = True
   for i in ids:
     deleted_order_item = db.session.get(OrderItems, i)
     deleted_order_item.deleted = True
   db.session.commit()
   return jsonify({"status": "success"})
+
+@app.route("/sales")
+@login_required
+def sales():
+  order_items = OrderItems.query.filter_by(deleted=False).filter_by(provided=True).all()
+  sales_ = 0
+  for i in order_items:
+    sales_ += i.price
+  return render_template("sales.html", sales="{:,}".format(sales_))
 
 @app.route("/dashboard", methods=["GET", "POST"])
 @login_required

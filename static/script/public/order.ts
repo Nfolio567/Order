@@ -1,3 +1,4 @@
+import { data } from "../../../../../node_modules/autoprefixer/lib/autoprefixer.js";
 import { moneyFormatter, flash } from "./script.js";
 
 let orders = [] as {id: string, options: string[], quantity: number, price: number}[]; // サーバーに送る注文内容
@@ -66,7 +67,8 @@ function util(datas:any, productsContainer: HTMLElement | null) {
           const quantity = document.getElementById(`quantity${i}`);
           if (quantity) quantity.innerHTML = `×${orders[i].quantity}`;
           const priceContainer = document.getElementById(`price${i}`);
-          orders[i].price = orders[i].price * orders[i].quantity;
+          console.log(orders[i].quantity)
+          orders[i].price += orders[i].price / (orders[i].quantity-1);
           if(priceContainer)priceContainer.innerHTML = `合計: ${moneyFormatter.format(orders[i].price)}`
           isSame = true;
         }
@@ -199,6 +201,7 @@ const socket = io.connect("https://order.nfolio.one");
 //const socket = io.connect("http://127.0.0.1:6743");
 
 socket.on('canProvide', (datas: Array<number>) => {
+  console.log(datas)
   const selecter = document.querySelector("select[name=order-number]") as HTMLSelectElement;
   const options = selecter.children;
   Array.from(options).forEach((option) => {
