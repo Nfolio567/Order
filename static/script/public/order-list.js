@@ -59,7 +59,7 @@ function drawOrderItems(datas) {
         provide === null || provide === void 0 ? void 0 : provide.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
             var _a;
             provide.disabled = true;
-            provide.textContent = "⏳";
+            provide.innerText = "⏳";
             const csrfToken = document.querySelector("input[name=csrf_token]");
             const ordererId = (_a = provide.parentElement) === null || _a === void 0 ? void 0 : _a.children[0].innerHTML;
             const res = yield fetch('/api/provide', {
@@ -81,7 +81,7 @@ function drawOrderItems(datas) {
         deleted === null || deleted === void 0 ? void 0 : deleted.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
             var _a;
             deleted.disabled = true;
-            deleted.textContent = "⏳";
+            deleted.innerText = "⏳";
             const csrfToken = document.querySelector("input[name=csrf_token]");
             const deletedOrdererId = Number((_a = deleted.parentElement) === null || _a === void 0 ? void 0 : _a.children[0].innerHTML);
             const deletedOrderItemId = [];
