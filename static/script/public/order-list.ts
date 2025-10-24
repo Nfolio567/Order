@@ -52,8 +52,10 @@ function drawOrderItems(datas: Array<Array<{id: number, ordererId: number, item:
     });
     
     // 提供ボタン
-    const provide = document.getElementById(`provide${count}`);
+    const provide = document.getElementById(`provide${count}`) as HTMLButtonElement;
     provide?.addEventListener('click', async () => {
+      provide.disabled = true;
+      provide.innerHTML = "⏳";
       const csrfToken = document.querySelector("input[name=csrf_token]") as HTMLInputElement;
       const ordererId = provide.parentElement?.children[0].innerHTML;
       const res = await fetch('/api/provide', {
@@ -72,8 +74,11 @@ function drawOrderItems(datas: Array<Array<{id: number, ordererId: number, item:
     });
     
     // 削除ボタン
-    const deleted = document.getElementById(`remove-order-list${count}`);
+    const deleted = document.getElementById(`remove-order-list${count}`) as HTMLButtonElement;
     deleted?.addEventListener('click', async () => {
+      deleted.disabled = true;
+      deleted.innerHTML = "⏳";
+      
       const csrfToken = document.querySelector("input[name=csrf_token]") as HTMLInputElement;
       const deletedOrdererId = Number(deleted.parentElement?.children[0].innerHTML);
       const deletedOrderItemId = [] as number[];

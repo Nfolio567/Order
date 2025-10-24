@@ -3,7 +3,7 @@ import { moneyFormatter, flash } from "./script.js";
 
 let orders = [] as {id: string, options: string[], quantity: number, price: number}[]; // サーバーに送る注文内容
 const removeOrderButton = document.getElementsByClassName("remove-order") as HTMLCollectionOf<HTMLButtonElement>;
-const orderSubmit = document.getElementById("order-submit");
+const orderSubmit = document.getElementById("order-submit") as HTMLButtonElement;
 
 function money2num(money: string) {
   return Number(money.substring(1, money.length).split(",").join(""))
@@ -167,6 +167,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   // 注文送信のアクション
   orderSubmit?.addEventListener('click', async () => {
+    if (orders.length == 0) return;
+    orderSubmit.disabled = true;
+    orderSubmit.innerHTML = "送信中...";
+    
     const orderNumSelecter = document.querySelector("select[name=order-number]") as HTMLSelectElement;
     const orderNum = orderNumSelecter.value;
     const csrfToken = document.querySelector("input[name=csrf_token]") as HTMLInputElement;
@@ -217,6 +221,9 @@ socket.on('canProvide', (datas: Array<number>) => {
   console.log(sortedDatas)
   const opt = options[sortedDatas[0] - 1] as HTMLOptionElement;
   opt.selected = true;
+  
+  orderSubmit.disabled = false;
+  orderSubmit.innerHTML = "注文内容を送信"
 });
 
 socket.on('connect', () => {
