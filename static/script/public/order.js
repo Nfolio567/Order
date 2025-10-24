@@ -203,6 +203,7 @@ socket.on('canProvide', (datas) => {
     console.log(datas);
     const selecter = document.querySelector("select[name=order-number]");
     const options = selecter.children;
+    const firstNum = 0;
     Array.from(options).forEach((option) => {
         const opt = option;
         opt.disabled = true;
@@ -211,6 +212,10 @@ socket.on('canProvide', (datas) => {
         const is_provided_num = options[data - 1];
         is_provided_num.disabled = false;
     });
+    const sortedDatas = datas.sort((a, b) => a - b);
+    console.log(sortedDatas);
+    const opt = options[sortedDatas[0] - 1];
+    opt.selected = true;
 });
 socket.on('connect', () => {
     console.log("!connect socket.io!");

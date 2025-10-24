@@ -204,6 +204,7 @@ socket.on('canProvide', (datas: Array<number>) => {
   console.log(datas)
   const selecter = document.querySelector("select[name=order-number]") as HTMLSelectElement;
   const options = selecter.children;
+  const firstNum = 0;
   Array.from(options).forEach((option) => {
     const opt = option as HTMLOptionElement;
     opt.disabled = true;
@@ -212,6 +213,10 @@ socket.on('canProvide', (datas: Array<number>) => {
     const is_provided_num = options[data-1] as HTMLOptionElement;
     is_provided_num.disabled = false;
   });
+  const sortedDatas = datas.sort((a, b) => a - b);
+  console.log(sortedDatas)
+  const opt = options[sortedDatas[0] - 1] as HTMLOptionElement;
+  opt.selected = true;
 });
 
 socket.on('connect', () => {
