@@ -56,7 +56,7 @@ function drawOrderItems(datas: Array<Array<{id: number, ordererId: number, item:
     provide?.addEventListener('click', async () => {
       provide.disabled = true;
       provide.innerText = "⏳";
-      provide.style.transform = 'translateZ(0)';
+      provide.offsetHeight;
       
       const csrfToken = document.querySelector("input[name=csrf_token]") as HTMLInputElement;
       const ordererId = provide.parentElement?.children[0].innerHTML;
@@ -80,7 +80,7 @@ function drawOrderItems(datas: Array<Array<{id: number, ordererId: number, item:
     deleted?.addEventListener('click', async () => {
       deleted.disabled = true;
       deleted.innerText = "⏳";
-      deleted.style.transform = 'translateZ(0)';
+      deleted.offsetHeight;
       
       const csrfToken = document.querySelector("input[name=csrf_token]") as HTMLInputElement;
       const deletedOrdererId = Number(deleted.parentElement?.children[0].innerHTML);

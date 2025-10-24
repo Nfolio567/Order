@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, vo
             return;
         orderSubmit.disabled = true;
         orderSubmit.innerText = "送信中...";
-        orderSubmit.style.transform = 'translateZ(0)';
+        orderSubmit.offsetHeight;
         const orderNumSelecter = document.querySelector("select[name=order-number]");
         const orderNum = orderNumSelecter.value;
         const csrfToken = document.querySelector("input[name=csrf_token]");
@@ -223,7 +223,7 @@ socket.on('canProvide', (datas) => {
     opt.selected = true;
     orderSubmit.disabled = false;
     orderSubmit.innerText = "注文内容を送信";
-    orderSubmit.style.transform = 'translateZ(0)';
+    orderSubmit.offsetHeight;
 });
 socket.on('connect', () => {
     console.log("!connect socket.io!");
