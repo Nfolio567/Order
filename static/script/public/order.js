@@ -135,7 +135,7 @@ function util(datas, productsContainer) {
                             console.log(allPrice);
                         });
                         if (orderSubmit)
-                            orderSubmit.innerHTML = `${moneyFormatter.format(allPrice)}<br>注文内容を送信`;
+                            orderSubmit.children[0].innerHTML = `${moneyFormatter.format(allPrice)}<br>注文内容を送信`;
                     };
                 });
             }
@@ -146,7 +146,7 @@ function util(datas, productsContainer) {
                 console.log(allPrice);
             });
             if (orderSubmit)
-                orderSubmit.innerHTML = `${moneyFormatter.format(allPrice)}<br>注文内容を送信`;
+                orderSubmit.children[0].innerHTML = `${moneyFormatter.format(allPrice)}<br>注文内容を送信`;
             isSame = false;
         };
     });
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, vo
         if (orders.length == 0)
             return;
         orderSubmit.disabled = true;
-        orderSubmit.innerText = "送信中...";
+        orderSubmit.children[0].innerHTML = "送信中...";
         orderSubmit.offsetHeight;
         const orderNumSelecter = document.querySelector("select[name=order-number]");
         const orderNum = orderNumSelecter.value;
@@ -222,7 +222,7 @@ socket.on('canProvide', (datas) => {
     const opt = options[sortedDatas[0] - 1];
     opt.selected = true;
     orderSubmit.disabled = false;
-    orderSubmit.innerText = "注文内容を送信";
+    orderSubmit.children[0].innerHTML = "注文内容を送信";
     orderSubmit.offsetHeight;
 });
 socket.on('connect', () => {

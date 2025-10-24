@@ -233,7 +233,7 @@ label strong {
   z-index: 0;
 }
 
-.order-submit span {
+.order-submit > span {
   font-weight: bold;
   font-size: 1.65em;
   color: antiquewhite;

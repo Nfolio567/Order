@@ -135,7 +135,7 @@ function util(datas:any, productsContainer: HTMLElement | null) {
               console.log(order.price)
               console.log(allPrice)
             });
-            if (orderSubmit) orderSubmit.innerHTML = `${moneyFormatter.format(allPrice)}<br>注文内容を送信`;
+            if (orderSubmit) orderSubmit.children[0].innerHTML = `${moneyFormatter.format(allPrice)}<br>注文内容を送信`;
           }
         });
       }
@@ -145,7 +145,7 @@ function util(datas:any, productsContainer: HTMLElement | null) {
         console.log(order.price)
         console.log(allPrice)
       });
-      if (orderSubmit) orderSubmit.innerHTML = `${moneyFormatter.format(allPrice)}<br>注文内容を送信`;
+      if (orderSubmit) orderSubmit.children[0].innerHTML = `${moneyFormatter.format(allPrice)}<br>注文内容を送信`;
       
       isSame = false;
     }
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   orderSubmit?.addEventListener('click', async () => {
     if (orders.length == 0) return;
     orderSubmit.disabled = true;
-    orderSubmit.innerText = "送信中...";
+    orderSubmit.children[0].innerHTML = "送信中...";
     orderSubmit.offsetHeight;
     
     const orderNumSelecter = document.querySelector("select[name=order-number]") as HTMLSelectElement;
@@ -224,7 +224,7 @@ socket.on('canProvide', (datas: Array<number>) => {
   opt.selected = true;
   
   orderSubmit.disabled = false;
-  orderSubmit.innerText = "注文内容を送信";
+  orderSubmit.children[0].innerHTML = "注文内容を送信";
   orderSubmit.offsetHeight;
 });
 
