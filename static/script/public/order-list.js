@@ -60,6 +60,7 @@ function drawOrderItems(datas) {
             var _a;
             provide.disabled = true;
             provide.innerText = "⏳";
+            provide.style.transform = 'translateZ(0)';
             const csrfToken = document.querySelector("input[name=csrf_token]");
             const ordererId = (_a = provide.parentElement) === null || _a === void 0 ? void 0 : _a.children[0].innerHTML;
             const res = yield fetch('/api/provide', {
@@ -82,6 +83,7 @@ function drawOrderItems(datas) {
             var _a;
             deleted.disabled = true;
             deleted.innerText = "⏳";
+            deleted.style.transform = 'translateZ(0)';
             const csrfToken = document.querySelector("input[name=csrf_token]");
             const deletedOrdererId = Number((_a = deleted.parentElement) === null || _a === void 0 ? void 0 : _a.children[0].innerHTML);
             const deletedOrderItemId = [];

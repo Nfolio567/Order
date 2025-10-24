@@ -170,6 +170,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (orders.length == 0) return;
     orderSubmit.disabled = true;
     orderSubmit.innerText = "送信中...";
+    orderSubmit.style.transform = 'translateZ(0)';
     
     const orderNumSelecter = document.querySelector("select[name=order-number]") as HTMLSelectElement;
     const orderNum = orderNumSelecter.value;
@@ -223,7 +224,8 @@ socket.on('canProvide', (datas: Array<number>) => {
   opt.selected = true;
   
   orderSubmit.disabled = false;
-  orderSubmit.innerText = "注文内容を送信"
+  orderSubmit.innerText = "注文内容を送信";
+  orderSubmit.style.transform = 'translateZ(0)';
 });
 
 socket.on('connect', () => {
