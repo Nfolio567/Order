@@ -228,12 +228,15 @@ label strong {
   bottom: 65vh;
   border-radius: 10px;
   border: none;
-  font-weight: bold;
-  font-size: 1.65em;
-  color: antiquewhite;
   background-color: rgba(75, 77, 150, 0.75);
   backdrop-filter: blur(3px);
   z-index: 0;
+}
+
+.order-submit span {
+  font-weight: bold;
+  font-size: 1.65em;
+  color: antiquewhite;
 }
 
 select[name=order-number] {
