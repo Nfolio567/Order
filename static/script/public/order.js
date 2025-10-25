@@ -190,6 +190,9 @@ document.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, vo
             const data = yield res.json();
             if (data.status) {
                 flash(data.status);
+                orderSubmit.disabled = false;
+                orderSubmit.children[0].innerHTML = "注文内容を送信";
+                orderSubmit.offsetHeight;
             }
             const container = document.getElementById("will-order-list");
             orders = [];
@@ -208,7 +211,6 @@ socket.on('canProvide', (datas) => {
     console.log(datas);
     const selecter = document.querySelector("select[name=order-number]");
     const options = selecter.children;
-    const firstNum = 0;
     Array.from(options).forEach((option) => {
         const opt = option;
         opt.disabled = true;
@@ -219,11 +221,14 @@ socket.on('canProvide', (datas) => {
     });
     const sortedDatas = datas.sort((a, b) => a - b);
     console.log(sortedDatas);
-    const opt = options[sortedDatas[0] - 1];
+    const extensive = [];
+    for (let i = 1; i < sortedDatas.length; i++) {
+        if (sortedDatas[i] - sortedDatas[i - 1] > 1) {
+            extensive.push(sortedDatas[i]);
+        }
+    }
+    const opt = options[extensive[extensive.length - 1] - 1];
     opt.selected = true;
-    orderSubmit.disabled = false;
-    orderSubmit.children[0].innerHTML = "注文内容を送信";
-    orderSubmit.offsetHeight;
 });
 socket.on('connect', () => {
     console.log("!connect socket.io!");

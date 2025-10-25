@@ -275,7 +275,7 @@ def new_order(_, __, ___):
   sales_ = 0
   for i in order_items:
     sales_ += i.price
-  socketio.emit("sales", sales_)
+  socketio.emit("sales", int(sales_))
 
 @event.listens_for(OrderItems, "after_update")
 def delete_order(_, __, target):

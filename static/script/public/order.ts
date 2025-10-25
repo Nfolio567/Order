@@ -191,6 +191,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       const data = await res.json();
       if(data.status) {
         flash(data.status);
+        orderSubmit.disabled = false;
+        orderSubmit.children[0].innerHTML = "注文内容を送信";
+        orderSubmit.offsetHeight;
       }
       const container = document.getElementById("will-order-list");
       orders = []
@@ -209,7 +212,6 @@ socket.on('canProvide', (datas: Array<number>) => {
   console.log(datas)
   const selecter = document.querySelector("select[name=order-number]") as HTMLSelectElement;
   const options = selecter.children;
-  const firstNum = 0;
   Array.from(options).forEach((option) => {
     const opt = option as HTMLOptionElement;
     opt.disabled = true;
@@ -220,12 +222,14 @@ socket.on('canProvide', (datas: Array<number>) => {
   });
   const sortedDatas = datas.sort((a, b) => a - b);
   console.log(sortedDatas)
-  const opt = options[sortedDatas[0] - 1] as HTMLOptionElement;
+  const extensive = [] as number[];
+  for (let i = 1; i < sortedDatas.length;i++) {
+    if (sortedDatas[i] - sortedDatas[i - 1] > 1) {
+      extensive.push(sortedDatas[i]);
+    }
+  }
+  const opt = options[extensive[extensive.length-1] - 1] as HTMLOptionElement;
   opt.selected = true;
-  
-  orderSubmit.disabled = false;
-  orderSubmit.children[0].innerHTML = "注文内容を送信";
-  orderSubmit.offsetHeight;
 });
 
 socket.on('connect', () => {
