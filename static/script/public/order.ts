@@ -228,7 +228,7 @@ socket.on('canProvide', (datas: Array<number>) => {
       extensive.push(sortedDatas[i]);
     }
   }
-  if (extensive.length == 0) extensive.push(1);
+  if (extensive.length == 0) extensive.push(sortedDatas[0]);
   const opt = options[extensive[extensive.length-1] - 1] as HTMLOptionElement;
   opt.selected = true;
 });

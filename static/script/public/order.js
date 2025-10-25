@@ -228,7 +228,7 @@ socket.on('canProvide', (datas) => {
         }
     }
     if (extensive.length == 0)
-        extensive.push(1);
+        extensive.push(sortedDatas[0]);
     const opt = options[extensive[extensive.length - 1] - 1];
     opt.selected = true;
 });
