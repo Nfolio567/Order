@@ -17,7 +17,7 @@
   <script>
   const socket = io.connect('https://order.nfolio.one');
   const sales = document.querySelector("h1.sales");
-  socket.on('sales', (data: number) => {
+  socket.on('sales', (data) => {
     sales.innerText = data;
   });
   </script>
