@@ -271,6 +271,12 @@ def new_order(_, __, ___):
   orders = return_list()
   socketio.emit("newOrder", orders)
 
+  order_items = OrderItems.query.filter_by(deleted=False).filter_by(provided=True).all()
+  sales_ = 0
+  for i in order_items:
+    sales_ += i.price
+  socketio.emit("sales", sales_)
+
 @event.listens_for(OrderItems, "after_update")
 def delete_order(_, __, target):
   state = inspect(target)

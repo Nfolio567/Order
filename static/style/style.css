@@ -236,7 +236,7 @@ label strong {
 .order-submit > span {
   font-weight: bold;
   font-size: 1.9em;
-  color: antiquewhite;
+  color: #faebd7;
 }
 
 select[name=order-number] {
