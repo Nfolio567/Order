@@ -167,6 +167,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   // 注文送信のアクション
   orderSubmit?.addEventListener('click', async () => {
+    const addOrderButton = document.getElementsByClassName("add-order") as HTMLCollectionOf<HTMLButtonElement>;
+    Array.from(addOrderButton).forEach((button) => {
+      button.disabled = true;
+    });
+    const removeOrderButton = document.getElementsByClassName("remove-order") as HTMLCollectionOf<HTMLButtonElement>;
+    Array.from(removeOrderButton).forEach((button) => {
+      button.disabled = true;
+    });
+    
     if (orders.length == 0) return;
     orderSubmit.disabled = true;
     orderSubmit.children[0].innerHTML = "送信中...";
@@ -190,6 +199,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.log(orders)
       const data = await res.json();
       if(data.status) {
+        Array.from(addOrderButton).forEach((button) => {
+          button.disabled = false;
+        });
+        Array.from(removeOrderButton).forEach((button) => {
+          button.disabled = false;
+        });
+        
         flash(data.status);
         orderSubmit.disabled = false;
         orderSubmit.children[0].innerHTML = "注文内容を送信";

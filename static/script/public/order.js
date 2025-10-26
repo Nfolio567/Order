@@ -166,6 +166,14 @@ document.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, vo
     }
     // 注文送信のアクション
     orderSubmit === null || orderSubmit === void 0 ? void 0 : orderSubmit.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
+        const addOrderButton = document.getElementsByClassName("add-order");
+        Array.from(addOrderButton).forEach((button) => {
+            button.disabled = true;
+        });
+        const removeOrderButton = document.getElementsByClassName("remove-order");
+        Array.from(removeOrderButton).forEach((button) => {
+            button.disabled = true;
+        });
         if (orders.length == 0)
             return;
         orderSubmit.disabled = true;
@@ -189,6 +197,12 @@ document.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, vo
             console.log(orders);
             const data = yield res.json();
             if (data.status) {
+                Array.from(addOrderButton).forEach((button) => {
+                    button.disabled = false;
+                });
+                Array.from(removeOrderButton).forEach((button) => {
+                    button.disabled = false;
+                });
                 flash(data.status);
                 orderSubmit.disabled = false;
                 orderSubmit.children[0].innerHTML = "注文内容を送信";
